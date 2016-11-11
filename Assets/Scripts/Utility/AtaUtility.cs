@@ -2,29 +2,18 @@
 
 public static class AtaUtility {
 	public static float GetFlatBearing(GameObject baseObject, GameObject target) {
-		Vector3 baseHeading = Vector3.ProjectOnPlane(baseObject.transform.forward, Vector3.up);
-
 		Vector3 deltaPos = target.transform.position - baseObject.transform.position;
 
-		Vector3 bearing = Vector3.ProjectOnPlane(deltaPos, Vector3.up);
+		Vector2 heading = new Vector2(baseObject.transform.forward.x, baseObject.transform.forward.z);
+		Vector2 targBearing = new Vector2(deltaPos.x, deltaPos.z);
 
-		// Debug.Log("Unit" + ((baseHeading.normalized - bearing.normalized) / 2f).ToString());
-
-		// Debug.DrawLine(baseObject.transform.position, baseObject.transform.position + baseObject.transform.up * 100, Color.green);
-		// Debug.DrawLine(baseObject.transform.position, target.transform.position, Color.red);
-		// //Debug.DrawLine(target.transform.position, target.transform.position + heading, Color.blue);
-		// //Debug.DrawLine(baseObject.transform.position, baseObject.transform.position + projection, Color.yellow);
-
-		return AngleSigned((baseHeading.normalized - bearing.normalized) / 2f);
+		return AngleSigned(targBearing, heading);
 	}
 
-	public static float AngleSigned(Vector3 vector) {
-		float bearingRads = Mathf.Atan2(vector.x, -vector.z);
+	public static float AngleSigned(Vector2 targBearing, Vector2 heading) {
 
-		float degs = 2f *  bearingRads * Mathf.Rad2Deg;
-		
-		//return degs;
-		//return bearingRads;
-		return degs > 180 ? -(360 - degs) : degs;
+		float angle = Mathf.Atan2(-targBearing.y * heading.x + targBearing.x * heading.y, targBearing.x * heading.x + targBearing.y * heading.y);
+
+		return Mathf.Rad2Deg * angle;
 	}
 }

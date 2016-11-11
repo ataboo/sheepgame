@@ -50,7 +50,8 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Mono\CameraOrbit.cs" />
      <Compile Include="Assets\Scripts\Mono\KeyboardController.cs" />
-     <Compile Include="Assets\Scripts\Mono\SheepMover.cs" />
+     <Compile Include="Assets\Scripts\Mono\SheepNavigator.cs" />
+     <Compile Include="Assets\Scripts\Old\SheepMover.cs" />
      <Compile Include="Assets\Scripts\Utility\AtaUtility.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

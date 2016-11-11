@@ -10,7 +10,7 @@ public class CameraOrbit : MonoBehaviour {
 
     void Start()
     {
-        offset = new Vector3(player.position.x, player.position.y + 5.0f, player.position.z + 3.5f);
+        offset = new Vector3(player.position.x, player.position.y + 40.0f, player.position.z + 5f);
     }
 
     void LateUpdate()
