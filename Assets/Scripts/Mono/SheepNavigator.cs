@@ -49,7 +49,7 @@ public class SheepNavigator : MonoBehaviour {
 				color = Color.black;
 				break;
 		}
-		
+
 		Debug.DrawLine(transform.position, transform.position + Vector3.up * 5, color);
 	}
 
@@ -125,7 +125,9 @@ public class SheepNavigator : MonoBehaviour {
 	}
 
 	private bool IsEnemy(GameObject entity) {
-		return entity.name == "sheep-target";
+		Spooker spooker = entity.GetComponent<Spooker>();
+
+		return spooker != null && spooker.IsActive();
 	}
 
 	private void RunAway(GameObject enemy) {
@@ -134,9 +136,9 @@ public class SheepNavigator : MonoBehaviour {
 			navAgent.speed = runningSpeed;
 		}
 
-		Vector3 runPos = (transform.position - enemy.transform.position).normalized * 30f + transform.position;
+		Vector3 runPos = (transform.position - enemy.transform.position).normalized * 100f + transform.position;
 		NavMeshHit hit;
-		NavMesh.SamplePosition(runPos, out hit, 30f, 1);
+		NavMesh.SamplePosition(runPos, out hit, 100f, 1);
 
 		navAgent.SetDestination(hit.position);
 	}

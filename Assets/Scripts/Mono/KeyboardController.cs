@@ -4,16 +4,15 @@ using System.Collections.Generic;
 public class KeyboardController : MonoBehaviour {
 
 	public float speed = 5.0f;
-	public GameObject camObject;
+	public string vertAxis;
+	public string horizAxis;
 
 	private Rigidbody rb;
-	private Camera camera;
 
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
-		camera = camObject.GetComponent<Camera>();
 	}
 	
 	// Update is called once per frame
@@ -22,9 +21,7 @@ public class KeyboardController : MonoBehaviour {
 	}
 
 	private void Move() {
-		Vector3 forward = new Vector3(camera.transform.forward.x, 0f, camera.transform.forward.z);
-		Vector3 right = new Vector3(camera.transform.right.x, 0f, camera.transform.right.z);
-		Vector3 move = (forward * Input.GetAxis("Vertical") + right * Input.GetAxis("Horizontal")).normalized * speed;
+		Vector3 move = (Vector3.forward * Input.GetAxis(vertAxis) + Vector3.right * Input.GetAxis(horizAxis)) * speed;
 
 		transform.position += move * Time.deltaTime;
 	}
