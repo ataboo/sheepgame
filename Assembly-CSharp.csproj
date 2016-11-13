@@ -48,9 +48,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Mono\CameraOrbit.cs" />
-     <Compile Include="Assets\Scripts\Mono\KeyboardController.cs" />
-     <Compile Include="Assets\Scripts\Mono\SheepNavigator.cs" />
+     <Compile Include="Assets\Scripts\Mono\CameraController.cs" />
+     <Compile Include="Assets\Scripts\Mono\Dog\DogController.cs" />
+     <Compile Include="Assets\Scripts\Mono\Sheep\SheepController.cs" />
      <Compile Include="Assets\Scripts\Mono\Spooker.cs" />
      <Compile Include="Assets\Scripts\Old\SheepMover.cs" />
      <Compile Include="Assets\Scripts\Utility\AtaUtility.cs" />
