@@ -16,13 +16,11 @@ public class DogController : MonoBehaviour {
 	public string horizAxis;
 	public string activateAxis;
 	public string runAxis;
-	private Rigidbody rb;
 	private Spooker spooker;
 	private Renderer rend;
 	private DogState dogState = DogState.Normal;
 
 	void Start () {
-		rb = GetComponent<Rigidbody>();
 		spooker = GetComponent<Spooker>();
 
 		rend = GetComponent<Renderer>();

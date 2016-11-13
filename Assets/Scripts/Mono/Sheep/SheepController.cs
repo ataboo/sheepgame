@@ -10,6 +10,8 @@ public class SheepController : MonoBehaviour {
 		Wandering,
 		Eating,
 		Dead,
+		Ballistic,
+		Recovering
 	}
 	NavMeshAgent navAgent;
 
@@ -21,13 +23,20 @@ public class SheepController : MonoBehaviour {
 	public float walkingSpeed = 5;
 	public float runningSpeed = 15;
 
-	public Vector2 wanderTimeRange = new Vector2(1.0f, 6.0f);
+	public float maxLaunchForce = 100f;
+	public float launchDistance = 3f;
 
-	private float wanderTimeout = 0f;
+	public Vector2 wanderTimeRange = new Vector2(2.0f, 4.0f);
 
+	public Vector2 eatTimeRange = new Vector2(3.0f, 4.0f);
+
+	private float actionTimeout = 0f;
+
+	private Rigidbody rb;
 
 	void Awake() {
 		navAgent = GetComponent <NavMeshAgent>();
+		rb = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
@@ -50,6 +59,9 @@ public class SheepController : MonoBehaviour {
 			case SheepState.Panicking:
 				color = Color.red;
 				break;
+			case SheepState.Eating:
+				color = Color.green;
+				break;
 			default:
 				color = Color.black;
 				break;
@@ -65,24 +77,29 @@ public class SheepController : MonoBehaviour {
 
 	}
 	private void Navigate() {
+		if (sheepState == SheepState.Ballistic) {
+			if (ShouldRecover()) {
+				sheepState = SheepState.Recovering;
+			} else {
+				return;
+			}
+		}
+
+		if (sheepState == SheepState.Recovering) {
+			if (!Recover()) {
+				return;
+			}
+		}
+
 		bool friend;
 		float magsqr;
 		GameObject closestEntity = ClosestEntity(out friend, out magsqr);
 
-		if (closestEntity != null) {
-			if (!friend) {
-				RunAway(closestEntity);
-				return;
-			}
-
-
-			if (magsqr > minFriendRange * minFriendRange) {
-				Herd(closestEntity);
-				return;
-			}
-		} 
-
-		Wander();
+		if (closestEntity != null && !friend) {
+			RunAway(closestEntity);
+		} else {
+			KillTime(closestEntity, magsqr);
+		}
 	}
 
 	private GameObject ClosestEntity(out bool friend, out float magsqr) {
@@ -136,33 +153,94 @@ public class SheepController : MonoBehaviour {
 	}
 
 	private void RunAway(GameObject enemy) {
-		if (sheepState != SheepState.Panicking) {
-			sheepState = SheepState.Panicking;
-			navAgent.speed = runningSpeed;
-		}
+		sheepState = SheepState.Panicking;
+		navAgent.speed = runningSpeed;
 
-		Vector3 runPos = (transform.position - enemy.transform.position).normalized * 100f + transform.position;
+		actionTimeout = Time.time + Random.Range(0.5f, 1.5f);
+
+		Vector3 runPos = (transform.position - enemy.transform.position).normalized * 10f + transform.position;
 		NavMeshHit hit;
-		NavMesh.SamplePosition(runPos, out hit, 100f, 1);
+		NavMesh.SamplePosition(runPos, out hit, 10f, 1);
 
 		navAgent.SetDestination(hit.position);
 	}
 
-	private void Wander() {
-		if (Time.time > wanderTimeout) {
-			wanderTimeout = Time.time + Random.Range(wanderTimeRange.x, wanderTimeRange.y);
+	public void Launch (float forcePower, Vector3 explosionPos, float forceRadius, float depth) {
+			navAgent.updatePosition = false;
+			navAgent.updateRotation = false;
+			navAgent.enabled = false;
+			rb.constraints = RigidbodyConstraints.None;
+
+			sheepState = SheepState.Ballistic;
+
+			actionTimeout = Time.time + 0.1f;
+
+			rb.AddExplosionForce(forcePower, explosionPos, forceRadius, depth);	
+	}
+	private bool ShouldRecover() {
+		return rb.velocity.sqrMagnitude < 4f;
+	}
+
+	private bool Recover() {
+		Quaternion homeRotation = Quaternion.Euler(0, 0, 0);
+
+		if (Quaternion.Angle(rb.rotation, homeRotation) < 5f) {
+			rb.rotation = homeRotation;
+			rb.constraints = RigidbodyConstraints.FreezeRotation;
+			navAgent.updatePosition = true;
+			navAgent.updateRotation = true;
+			navAgent.enabled = true;
+			sheepState = SheepState.Idle;
+			return true;
+		}
+
+		rb.rotation = Quaternion.RotateTowards(rb.rotation, homeRotation, 100f * Time.deltaTime);
+		//rb.velocity = new Vector3(0, 0, 0);
+			
+		return false;
+	}
+
+	private void KillTime(GameObject nearestFriend, float rangeSqr) {
+		if (Time.time > actionTimeout) {
 			navAgent.speed = walkingSpeed;
-			navAgent.SetDestination(getWanderPos());
-			sheepState = SheepState.Wandering;
+			if (nearestFriend != null && rangeSqr > minFriendRange * minFriendRange) {
+				Herd(nearestFriend);
+				return;
+			}
+
+			if (ShouldEat()) {
+				Eat();
+			} else {
+				Wander();
+			}
 		}
 	}
 
-	private void Herd(GameObject friend) {
-		if (sheepState != SheepState.Herding) {
-			navAgent.speed = walkingSpeed;
-			sheepState = SheepState.Herding;
-		}
+	private void Eat() {
+		actionTimeout = Time.time + Random.Range(eatTimeRange.x, eatTimeRange.y);
+		navAgent.SetDestination(transform.position);
+		sheepState = SheepState.Eating;
+	}
 
+	private void Wander() {
+		actionTimeout = Time.time + Random.Range(wanderTimeRange.x, wanderTimeRange.y);
+		navAgent.SetDestination(getWanderPos());
+		sheepState = SheepState.Wandering;
+	}
+
+	private bool ShouldEat() {
+		//TODO Grass.
+
+		int roll = Random.Range(1, 10);
+
+		return roll > 7;
+	}
+
+	private void Herd(GameObject friend) {
+		navAgent.speed = walkingSpeed;
+		sheepState = SheepState.Herding;
+
+		actionTimeout = Time.time + 0.2f;
 		navAgent.SetDestination(friend.transform.position);
 	}
 
