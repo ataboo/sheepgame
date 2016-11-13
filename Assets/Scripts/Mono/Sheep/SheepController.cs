@@ -8,6 +8,7 @@ public class SheepController : MonoBehaviour {
 		Panicking,
 		Herding,
 		Wandering,
+		Eating,
 		Dead,
 	}
 	NavMeshAgent navAgent;
@@ -19,6 +20,10 @@ public class SheepController : MonoBehaviour {
 
 	public float walkingSpeed = 5;
 	public float runningSpeed = 15;
+
+	public Vector2 wanderTimeRange = new Vector2(1.0f, 6.0f);
+
+	private float wanderTimeout = 0f;
 
 
 	void Awake() {
@@ -144,7 +149,8 @@ public class SheepController : MonoBehaviour {
 	}
 
 	private void Wander() {
-		if (sheepState !=  SheepState.Wandering || !navAgent.hasPath) {
+		if (Time.time > wanderTimeout) {
+			wanderTimeout = Time.time + Random.Range(wanderTimeRange.x, wanderTimeRange.y);
 			navAgent.speed = walkingSpeed;
 			navAgent.SetDestination(getWanderPos());
 			sheepState = SheepState.Wandering;
