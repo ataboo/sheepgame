@@ -40,7 +40,6 @@ public class Spooker : MonoBehaviour {
 			}
 
 			SheepController sc = hit.GetComponent<SheepController>();
-            Rigidbody rb = hit.GetComponent<Rigidbody>();
             
 			if (sc != null) {
 				sc.Launch(forcePower, explosionPos, forceRadius, 2.0f);
