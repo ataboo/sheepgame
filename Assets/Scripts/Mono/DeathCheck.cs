@@ -2,13 +2,12 @@
 using System.Collections;
 
 public class DeathCheck : MonoBehaviour {
-
 	public bool respawnable = false;
 	public float deathHeight = -20f;
-	private EntitySpawner spawner;
+	private SceneManager manager;
 	private bool isSheep;
 	public void Start() {
-		spawner = GameObject.FindGameObjectWithTag("EntitySpawner").GetComponent<EntitySpawner>();
+		manager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManager>();
 		isSheep = GetComponent<SheepController>() != null;
 	}
 	public void FixedUpdate () {
@@ -18,6 +17,10 @@ public class DeathCheck : MonoBehaviour {
 	}
 
 	private void isKill() {
-		spawner.IsKill(gameObject, this, isSheep);
+		manager.IsKill(gameObject, this);
+	}
+
+	public bool IsSheep() {
+		return isSheep;
 	}
 }

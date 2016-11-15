@@ -33,6 +33,7 @@ public class SheepController : MonoBehaviour {
 	private float actionTimeout = 0f;
 
 	private Rigidbody rb;
+	private bool paused = false;
 
 	void Awake() {
 		navAgent = GetComponent <NavMeshAgent>();
@@ -41,9 +42,21 @@ public class SheepController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(paused) {
+			return;
+		}
+
 		UpdateMovement();
 
 		ColorizeBehavior();
+	}
+
+	void OnPause() {
+		this.paused = true;
+	}
+
+	void OnResume() {
+		this.paused = false;
 	}
 
 	private void ColorizeBehavior() {

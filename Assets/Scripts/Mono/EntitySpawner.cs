@@ -3,40 +3,58 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class EntitySpawner : MonoBehaviour {
-	public int sheepCount = 10;
+	private int sheepCount = 12;
 	public Vector2 spawnRadRange = new Vector2(2f, 10f);
 	public float spawnCheckRad = 1f;
 	public GameObject sheepPrefab;
 	
 	private List<Transform> sheepSpawns = new List<Transform>();
-	private Transform dogSpawn;
+	private Transform dogSpawnOne;
+	private Transform dogSpawnTwo;
 	private UIInterface uiInterface;
 
-	public void Start () {
-		GetSpawnPoints();
+	public int Reset() {
+		if (dogSpawnOne == null) {
+			GetSpawnPoints();
+		}
+
+		foreach(GameObject entity in GameObject.FindGameObjectsWithTag("entity")) {
+			if (entity.name.Contains("Sheep")) {
+				Destroy(entity);
+			}
+
+			if (entity.name.Contains("Dog")) {
+				RespawnDog(entity);
+			}
+		}
+
 		InitialSpawn();
 
-		this.uiInterface = GetComponent<UIInterface>();
-		uiInterface.UpdateTotalSheep(sheepCount);
+		return sheepCount;
 	}
 
-	public void SpawnSheep(Transform basePosition) {
+	private void InitialSpawn() {
+		for (int i=0; i < sheepCount; i++) {
+			int spawnPointIndex = Random.Range(0, sheepSpawns.Count);
+
+			SpawnSheep(sheepSpawns[spawnPointIndex]);
+		}
+	}
+
+	public void RespawnDog(GameObject dog) {
+		if (dog.name.Equals("DogOne")) {
+			dog.transform.position = dogSpawnOne.position;
+		} else if (dog.name.Equals("DogTwo")) {
+			dog.transform.position = dogSpawnTwo.position;
+		}
+
+		dog.GetComponent<Rigidbody>().velocity = Vector3.zero;
+	}
+	
+	private void SpawnSheep(Transform basePosition) {
 		Vector3 spawnPos = makeSpawnPoint(basePosition);
 
 		Instantiate(sheepPrefab, spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0));
-	}
-
-	public void IsKill(GameObject gameObject, DeathCheck deathCheck, bool isSheep) {
-		if (deathCheck.respawnable) {
-			gameObject.transform.position = dogSpawn.position;
-			gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-		} else {
-			GameObject.Destroy(gameObject);
-		}
-
-		if (isSheep) {
-			uiInterface.AddDeadSheep();
-		}
 	}
 
 	private Vector3 makeSpawnPoint(Transform basePosition) {
@@ -70,17 +88,12 @@ public class EntitySpawner : MonoBehaviour {
 				continue;
 			}
 
-			if (gameObject.name.Contains("Dog")) {
-				dogSpawn = gameObject.transform;
+			if (gameObject.name.Equals("DogSpawnOne")) {
+				dogSpawnOne = gameObject.transform;
 			}
-		}
-	}
-
-	private void InitialSpawn() {
-		for (int i=0; i < sheepCount; i++) {
-			int spawnPointIndex = Random.Range(0, sheepSpawns.Count);
-
-			SpawnSheep(sheepSpawns[spawnPointIndex]);
+			if (gameObject.name.Equals("DogSpawnTwo")) {
+				dogSpawnTwo = gameObject.transform;
+			}
 		}
 	}
 }

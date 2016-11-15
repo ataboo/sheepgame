@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-
 
 public class SheepCounter : MonoBehaviour {
-	public UIInterface uiInterface;
+	private SceneManager sceneManager;
 	private int sheepCount = 0;
 
 	void Start() {
-		UpdateDisplay();
+		sceneManager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManager>();
+
+		UpdateGoal();
 	}
 
 	public void OnTriggerEnter(Collider collider) {
@@ -16,7 +15,7 @@ public class SheepCounter : MonoBehaviour {
 
 		if (sc != null) {
 			sheepCount++;
-			UpdateDisplay();
+			UpdateGoal();
 		}
 	}
 
@@ -25,11 +24,13 @@ public class SheepCounter : MonoBehaviour {
 
 		if (sc != null) {
 			sheepCount--;
-			UpdateDisplay();
+			UpdateGoal();
 		}
 	}
 
-	private void UpdateDisplay() {
-		uiInterface.UpdateGoalCount(sheepCount);
+	private void UpdateGoal() {
+		Debug.Log("Sheep Count now: " + sheepCount);
+
+		sceneManager.UpdateGoal(sheepCount);
 	}
 }

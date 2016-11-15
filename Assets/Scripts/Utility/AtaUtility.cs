@@ -16,4 +16,10 @@ public static class AtaUtility {
 
 		return Mathf.Rad2Deg * angle;
 	}
+
+	public static string SecsToMinSec(float seconds) {
+		int intSecs = Mathf.RoundToInt(seconds);
+
+		return string.Format("{0}:{1}", intSecs / 60, intSecs % 60);
+	}
 }

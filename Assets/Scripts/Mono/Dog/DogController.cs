@@ -19,6 +19,7 @@ public class DogController : MonoBehaviour {
 	private Spooker spooker;
 	private Renderer rend;
 	private DogState dogState = DogState.Normal;
+	private bool paused = false;
 
 	void Start () {
 		spooker = GetComponent<Spooker>();
@@ -27,11 +28,23 @@ public class DogController : MonoBehaviour {
 	}
 	
 	void Update () {
+		if(paused) {
+			return;
+		}
+
 		this.dogState = UpdateState();
 
 		Move();
 
 		Colorize();
+	}
+
+	void OnPause() {
+		this.paused = true;
+	}
+
+	void OnResume() {
+		this.paused = false;
 	}
 
 	private void Colorize() {
