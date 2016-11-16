@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 
 public class SheepCounter : MonoBehaviour {
-	private SceneManager sceneManager;
-	private int sheepCount = 0;
+	private LevelManager levelManager;
+	private int sheepCount;
 
+	void Awake() {
+		levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
+		sheepCount = 0;
+	}
 	void Start() {
-		sceneManager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManager>();
-
 		UpdateGoal();
 	}
 
@@ -29,8 +31,6 @@ public class SheepCounter : MonoBehaviour {
 	}
 
 	private void UpdateGoal() {
-		Debug.Log("Sheep Count now: " + sheepCount);
-
-		sceneManager.UpdateGoal(sheepCount);
+		levelManager.UpdateGoal(sheepCount);
 	}
 }

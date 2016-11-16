@@ -39,8 +39,7 @@ public class SheepController : MonoBehaviour {
 		navAgent = GetComponent <NavMeshAgent>();
 		rb = GetComponent<Rigidbody>();
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		if(paused) {
 			return;

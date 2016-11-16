@@ -16,7 +16,7 @@ Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Dat
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.150 seconds
+- Completed reload, in  0.123 seconds
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
@@ -24,31 +24,7 @@ desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
 XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.867259 ms
-totalSheep: 12
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Sheep Count now: 0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-totalSheep: 12
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
+UnloadTime: 0.693398 ms
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 1eac -> priority: 1 
-  Thread -> id: 3708 -> priority: 1 
-totalSheep: 12
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-totalSheep: 12
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-totalSheep: 12
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
+  Thread -> id: 3200 -> priority: 1 
+  Thread -> id: 1c60 -> priority: 1 

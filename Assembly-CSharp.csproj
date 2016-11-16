@@ -52,7 +52,8 @@
      <Compile Include="Assets\Scripts\Mono\DeathCheck.cs" />
      <Compile Include="Assets\Scripts\Mono\Dog\DogController.cs" />
      <Compile Include="Assets\Scripts\Mono\EntitySpawner.cs" />
-     <Compile Include="Assets\Scripts\Mono\SceneManager.cs" />
+     <Compile Include="Assets\Scripts\Mono\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\Mono\MenuController.cs" />
      <Compile Include="Assets\Scripts\Mono\Sheep\SheepController.cs" />
      <Compile Include="Assets\Scripts\Mono\SheepCounter.cs" />
      <Compile Include="Assets\Scripts\Mono\Spooker.cs" />

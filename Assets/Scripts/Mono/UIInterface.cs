@@ -59,6 +59,7 @@ public class UIInterface : MonoBehaviour {
 	public Text endTitle;
 	public Text endSubtitle;
 	public Text endDetail;
+	public GameObject pausePanel;
 
 	public void UpdateHud(int totalSheep, int sheepInGoal, int deadSheep) {
 		int wildCount = totalSheep - sheepInGoal - deadSheep;
@@ -75,7 +76,12 @@ public class UIInterface : MonoBehaviour {
 		endSubtitle.text = summary.Subtitle();
 		endDetail.text = summary.Details();
 		
+		pausePanel.SetActive(false);
 		endPanel.SetActive(true);
+	}
+
+	public void ShowPauseScreen(bool show) {
+		pausePanel.SetActive(show);
 	}
 
 	public void HideEndScreen() {

@@ -4,10 +4,10 @@ using System.Collections;
 public class DeathCheck : MonoBehaviour {
 	public bool respawnable = false;
 	public float deathHeight = -20f;
-	private SceneManager manager;
+	private LevelManager manager;
 	private bool isSheep;
 	public void Start() {
-		manager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManager>();
+		manager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
 		isSheep = GetComponent<SheepController>() != null;
 	}
 	public void FixedUpdate () {
