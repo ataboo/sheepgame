@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 
+public interface CountListener {
+	void OnCountChange(int newCount);
+}
 public class SheepCounter : MonoBehaviour {
-	private LevelManager levelManager;
+	private CountListener countListener;
 	private int sheepCount;
 
 	void Awake() {
-		levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
 		sheepCount = 0;
 	}
 	void Start() {
-		UpdateGoal();
+		SendCount();
 	}
 
 	public void OnTriggerEnter(Collider collider) {
@@ -17,7 +19,7 @@ public class SheepCounter : MonoBehaviour {
 
 		if (sc != null) {
 			sheepCount++;
-			UpdateGoal();
+			SendCount();
 		}
 	}
 
@@ -26,11 +28,15 @@ public class SheepCounter : MonoBehaviour {
 
 		if (sc != null) {
 			sheepCount--;
-			UpdateGoal();
+			SendCount();
 		}
 	}
 
-	private void UpdateGoal() {
-		levelManager.UpdateGoal(sheepCount);
+	private void SendCount() {
+		if (countListener == null) {
+			Debug.LogError("SheepCounter has no listener.");
+		} else {
+			countListener.OnCountChange(sheepCount);
+		}
 	}
 }

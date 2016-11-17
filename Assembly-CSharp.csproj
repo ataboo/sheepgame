@@ -58,6 +58,9 @@
      <Compile Include="Assets\Scripts\Mono\SheepCounter.cs" />
      <Compile Include="Assets\Scripts\Mono\Spooker.cs" />
      <Compile Include="Assets\Scripts\Mono\UIInterface.cs" />
+     <Compile Include="Assets\Scripts\Network\PlayerControl.cs" />
+     <Compile Include="Assets\Scripts\Network\PlayerMover.cs" />
+     <Compile Include="Assets\Scripts\Network\SheepNetworkManager.cs" />
      <Compile Include="Assets\Scripts\Utility\AtaUtility.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

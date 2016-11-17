@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Networking;
 
-public class SheepController : MonoBehaviour {
+public class SheepController : NetworkBehaviour {
 	public enum SheepState
 	{
 		Idle,
@@ -16,7 +16,7 @@ public class SheepController : MonoBehaviour {
 	NavMeshAgent navAgent;
 
 	public float maxFriendRange = 100f;
-	public float minFriendRange = 0.5f;
+	public float minFriendRange = 4f;
 	public float maxEnemyRange = 30f;
 	public SheepState sheepState = SheepState.Idle;
 
@@ -41,7 +41,7 @@ public class SheepController : MonoBehaviour {
 	}
 
 	void Update () {
-		if(paused) {
+		if (!isServer) {
 			return;
 		}
 

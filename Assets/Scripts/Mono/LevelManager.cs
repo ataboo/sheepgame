@@ -39,10 +39,10 @@ public class LevelManager : MonoBehaviour {
 			GameObject.Destroy(gameObject);
 		}
 
-		if (deathCheck.IsSheep()) {
-			deadSheep++;
-			UpdateHud();
-		}
+		// if (deathCheck.IsSheep()) {
+		// 	deadSheep++;
+		// 	UpdateHud();
+		// }
 	}
 
 	public void UpdateGoal(int sheepInGoal) {

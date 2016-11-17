@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Networking;
 
-public class CameraController : MonoBehaviour
+public class CameraController : NetworkBehaviour
 {
     public GameObject dogOne;
     public GameObject dogTwo;
@@ -27,12 +27,6 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         MoveCam();
-    }
-
-    public void FollowDog(GameObject dog, bool exclusive = false)
-    {
-        dogTwo = exclusive ? null : dogOne;
-        dogOne = dog;
     }
 
     private void MoveCam()

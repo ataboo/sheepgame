@@ -1,19 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class EntitySpawner : MonoBehaviour {
+public class EntitySpawner : NetworkBehaviour {
 
-	public enum DogControl {
-		DogOne,
-		DogTwo,
-		None
-	}
 	private int sheepCount = 12;
 	public Vector2 spawnRadRange = new Vector2(2f, 10f);
 	public float spawnCheckRad = 1f;
 	public GameObject sheepPrefab;
 	public GameObject dogPrefab;
+	public GameObject netDogPrefab;
 	
 	private List<Transform> sheepSpawns = new List<Transform>();
 	private Transform dogSpawnOne;
@@ -23,20 +19,25 @@ public class EntitySpawner : MonoBehaviour {
 	public void Awake() {
 		GetSpawnPoints();
 		camController = GameObject.Find("Camera").GetComponent<CameraController>();
+
+		//InitialSpawn();
 	}
 
-	public void Start() {
-		InitialSpawn();
-	}
+	// public GameObject SpawnDog(PlayerControl.DogControl dogControl, string name, bool camFollow = false) {
+	// 	GameObject dog = (GameObject) GameObject.Instantiate(dogPrefab, MakeSpawnPoint(dogSpawnOne), Quaternion.Euler(0, 0, 0));
+	// 	dog.name = name;
+	// 	//dog.GetComponent<DogController>().SetControl(dogControl);
 
-	public GameObject SpawnDog(DogControl dogControl, string name, bool camFollow = false) {
-		GameObject dog = (GameObject) GameObject.Instantiate(dogPrefab, MakeSpawnPoint(dogSpawnOne), Quaternion.Euler(0, 0, 0));
+	// 	if (camFollow) {
+	// 		camController.RpcFollowDog(dog, false);
+	// 	}
+
+	// 	return dog;
+	// }
+
+	public GameObject SpawnNetDog(string name) {
+		GameObject dog = (GameObject) GameObject.Instantiate(netDogPrefab, MakeSpawnPoint(dogSpawnOne), Quaternion.Euler(0, 0, 0));
 		dog.name = name;
-		dog.GetComponent<DogController>().SetControl(dogControl);
-
-		if (camFollow) {
-			camController.FollowDog(dog, false);
-		}
 
 		return dog;
 	}
@@ -49,16 +50,17 @@ public class EntitySpawner : MonoBehaviour {
 	private void SpawnSheep(Transform basePosition) {
 		Vector3 spawnPos = MakeSpawnPoint(basePosition);
 
-		Instantiate(sheepPrefab, spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0));
+		GameObject sheep = (GameObject) Instantiate(sheepPrefab, spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0));
+		 NetworkServer.Spawn(sheep);
 	}
 
 	public int GetSheepCount() {
 		return sheepCount;
 	}
 
-	private void InitialSpawn() {
-		GameObject dogOne = SpawnDog(DogControl.DogOne, "DogOne", true);
-		GameObject dogTwo = SpawnDog(DogControl.DogTwo, "DogTwo", true);
+	public void InitialSpawn() {
+		//GameObject dogOne = SpawnDog(DogControl.DogOne, "DogOne", true);
+		//GameObject dogTwo = SpawnDog(DogControl.DogTwo, "DogTwo", true);
 		
 		for (int i=0; i < sheepCount; i++) {
 			int spawnPointIndex = Random.Range(0, sheepSpawns.Count);

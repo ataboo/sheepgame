@@ -47,25 +47,25 @@ public class DogController : MonoBehaviour {
 		this.paused = false;
 	}
 
-	public void SetControl(EntitySpawner.DogControl dogControl) {
-		switch(dogControl) {
-			case EntitySpawner.DogControl.DogOne:
-				vertAxis = "Vertical";
-				horizAxis = "Horizontal";
-				activateAxis = "OneActivate";
-				runAxis = "OneRun";
-			break;
-			case EntitySpawner.DogControl.DogTwo:
-				vertAxis = "TwoVertical";
-				horizAxis = "TwoHorizontal";
-				activateAxis = "TwoActivate";
-				runAxis = "TwoRun";
-			break;
-			default:
-			Debug.LogError("DogController shouldn't be handling Non Player DogControl.");
-			break;
-		}
-	}
+	// public void SetControl(EntitySpawner.DogControl dogControl) {
+	// 	switch(dogControl) {
+	// 		case EntitySpawner.DogControl.DogOne:
+	// 			vertAxis = "Vertical";
+	// 			horizAxis = "Horizontal";
+	// 			activateAxis = "OneActivate";
+	// 			runAxis = "OneRun";
+	// 		break;
+	// 		case EntitySpawner.DogControl.DogTwo:
+	// 			vertAxis = "TwoVertical";
+	// 			horizAxis = "TwoHorizontal";
+	// 			activateAxis = "TwoActivate";
+	// 			runAxis = "TwoRun";
+	// 		break;
+	// 		default:
+	// 		Debug.LogError("DogController shouldn't be handling Non Player DogControl.");
+	// 		break;
+	// 	}
+	// }
 
 	private void Colorize() {
 		Color rendColor = Color.white;
