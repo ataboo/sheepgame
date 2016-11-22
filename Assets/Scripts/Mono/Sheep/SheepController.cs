@@ -33,18 +33,22 @@ public class SheepController : NetworkBehaviour {
 	private float actionTimeout = 0f;
 
 	private Rigidbody rb;
+	private Renderer rendComponent;
 	private bool paused = false;
 
 	void Awake() {
+		NetworkIdentity netId = GetComponent<NetworkIdentity> ();
+
+		if (!GetComponent<NetworkIdentity> ()) {
+			enabled = false;
+		}
+
 		navAgent = GetComponent <NavMeshAgent>();
 		rb = GetComponent<Rigidbody>();
+		rendComponent = GetComponentInChildren<Renderer> ();
 	}
 
 	void Update () {
-		if (!isServer) {
-			return;
-		}
-
 		UpdateMovement();
 
 		ColorizeBehavior();
@@ -79,7 +83,7 @@ public class SheepController : NetworkBehaviour {
 				break;
 		}
 
-		Debug.DrawLine(transform.position, transform.position + Vector3.up * 5, color);
+		rendComponent.material.color = color;
 	}
 
 	private void UpdateMovement() {

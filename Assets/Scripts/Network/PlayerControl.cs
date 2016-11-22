@@ -16,14 +16,10 @@ public class PlayerControl : NetworkBehaviour {
 	float runSpeed = 10f;
 	private float speed;
 	private bool running = false;
-	
-	void Start() {
-		speed = walkSpeed;
 
-		if (isLocalPlayer) {
-			GameObject.FindGameObjectWithTag("Camera").GetComponent<CameraController>().dogOne = gameObject;
-			GameObject.FindGameObjectWithTag("LevelManager").GetComponent<EntitySpawner>().InitialSpawn();
-		}
+	public override void OnStartLocalPlayer() 
+	{
+		speed = walkSpeed;
 	}
 
 	void Update () {
@@ -48,11 +44,8 @@ public class PlayerControl : NetworkBehaviour {
 			speed = running ? runSpeed : walkSpeed;
 		}
 	}
-
-	[ClientRpc]
-	public void RpcSetControl(int dogControlVal) {
-		DogControl dogControl = (DogControl) dogControlVal;
-
+		
+	public void SetControls(DogControl dogControl) {
 		switch(dogControl) {
 			case DogControl.DogOne:
 				vertAxis = "Vertical";

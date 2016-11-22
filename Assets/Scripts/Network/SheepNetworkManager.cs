@@ -7,10 +7,14 @@ public class SheepNetworkManager : NetworkManager {
     void Awake() {
         entitySpawner = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<EntitySpawner>();
     }
-	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) 
-    {
-        GameObject dogOne = entitySpawner.SpawnNetDog("DogOne_" + playerControllerId);
-        NetworkServer.AddPlayerForConnection(conn, dogOne, playerControllerId);
-        dogOne.GetComponent<PlayerControl>().RpcSetControl((int) PlayerControl.DogControl.DogOne);
-    }
+	// public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) 
+    // {
+    //     GameObject dogOne = entitySpawner.SpawnNetDog("DogOne_" + playerControllerId);
+    //     NetworkServer.AddPlayerForConnection(conn, dogOne, playerControllerId);
+    //     dogOne.GetComponent<PlayerControl>().RpcSetControl(PlayerControl.DogControl.DogOne);
+
+    //     Debug.Log("Ran spawn");
+    // }
+
+
 }

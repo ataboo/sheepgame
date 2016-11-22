@@ -7,6 +7,11 @@ public class MenuController : MonoBehaviour {
 		SceneManager.LoadScene("SoloTestLevel");
 	}
 
+	public void OpenMultiTest()
+	{
+		SceneManager.LoadScene ("Lobby");
+	}
+
 	public void QuitGame() {
 		Application.Quit();
 	}

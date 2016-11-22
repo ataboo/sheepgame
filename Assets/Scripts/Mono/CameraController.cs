@@ -20,6 +20,10 @@ public class CameraController : NetworkBehaviour
 
     void Update()
     {
+		if (dogOne == null) {
+			FindLocalPlayers ();
+		}
+
         CatchWideToggle();
     }
 
@@ -28,6 +32,25 @@ public class CameraController : NetworkBehaviour
     {
         MoveCam();
     }
+
+	private void FindLocalPlayers() {
+		bool dogOneSet = false;
+		foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
+			PlayerControl control = player.GetComponent<PlayerControl> ();
+
+			if (player.GetComponent<NetworkIdentity>().isLocalPlayer) {
+				if (!dogOneSet) {
+					dogOne = player;
+					control.SetControls (PlayerControl.DogControl.DogOne);
+					dogOneSet = true;
+				} else {
+					dogTwo = player;
+					control.SetControls (PlayerControl.DogControl.DogTwo);
+					return;
+				}
+			}
+		}
+	}
 
     private void MoveCam()
     {

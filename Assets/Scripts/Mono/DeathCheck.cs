@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 public interface EntityDelegate {
 	void IsKill(GameObject gameObject, bool imortal);
@@ -7,6 +8,13 @@ public class DeathCheck : MonoBehaviour {
 	public bool respawnable = false;
 	public float deathHeight = -20f;
 	private EntityDelegate entDelegate;
+
+	public void Awake() 
+	{
+		if (!GetComponent<NetworkIdentity> ().isServer) {
+			enabled = false;
+		}
+	}
 
 	public void FixedUpdate () {
 

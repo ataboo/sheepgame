@@ -1,4 +1,4 @@
-Initialize engine version: 5.4.2f2 (b7e030c65c9b)
+Initialize engine version: 5.4.3f1 (01f4c123905a)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.0]
@@ -16,64 +16,63 @@ Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Dat
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.128 seconds
+- Completed reload, in  0.143 seconds
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
 <RI> Initializing input.
-XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.803666 ms
-NullReferenceException: Object reference not set to an instance of an object
-  at SheepNetworkManager.Awake () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
+UnloadTime: 0.735406 ms
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: df8 -> priority: 1 
+  Thread -> id: 169c -> priority: 1 
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 4.803330 ms
 
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 624.
+Total: 0.414522 ms (FindLiveObjects: 0.049591 ms CreateObjectMapping: 0.036464 ms MarkObjects: 0.320883 ms  DeleteObjects: 0.007292 ms)
+
+DontDestroyOnLoad only work for root GameObjects or components on root GameObjects.
+ 
+(Filename:  Line: 386)
+
+DontDestroyOnLoad only work for root GameObjects or components on root GameObjects.
+ 
+(Filename:  Line: 386)
+
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.250288 ms
 SheepCounter has no listener.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-Setting up 2 worker threads for Enlighten.
-  Thread -> id: 24c8 -> priority: 1 
-  Thread -> id: ba4 -> priority: 1 
-NullReferenceException: Object reference not set to an instance of an object
-  at SheepNetworkManager.OnServerAddPlayer (UnityEngine.Networking.NetworkConnection conn, Int16 playerControllerId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkManager.OnServerAddPlayerMessageInternal (UnityEngine.Networking.NetworkMessage netMsg) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkConnection.InvokeHandler (Int16 msgType, UnityEngine.Networking.NetworkReader reader, Int32 channelId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkServer.InvokeHandlerOnServer (UnityEngine.Networking.ULocalConnectionToServer conn, Int16 msgType, UnityEngine.Networking.MessageBase msg, Int32 channelId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.ULocalConnectionToServer.Send (Int16 msgType, UnityEngine.Networking.MessageBase msg) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.ClientScene.AddPlayer (UnityEngine.Networking.NetworkConnection readyConn, Int16 playerControllerId, UnityEngine.Networking.MessageBase extraMessage) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.ClientScene.AddPlayer (UnityEngine.Networking.NetworkConnection readyConn, Int16 playerControllerId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.ClientScene.AddPlayer (Int16 playerControllerId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkManager.OnClientConnect (UnityEngine.Networking.NetworkConnection conn) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkManager.OnClientConnectInternal (UnityEngine.Networking.NetworkMessage netMsg) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkConnection.InvokeHandler (UnityEngine.Networking.NetworkMessage netMsg) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.LocalClient.ProcessInternalMessages () [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.LocalClient.Update () [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkClient.UpdateClients () [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkIdentity.UNetStaticUpdate () [0x00000] in <filename unknown>:0 
+Started Server
  
-(Filename:  Line: -1)
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-NullReferenceException: Object reference not set to an instance of an object
-  at SheepNetworkManager.OnServerAddPlayer (UnityEngine.Networking.NetworkConnection conn, Int16 playerControllerId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkManager.OnServerAddPlayerMessageInternal (UnityEngine.Networking.NetworkMessage netMsg) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkConnection.HandleReader (UnityEngine.Networking.NetworkReader reader, Int32 receivedSize, Int32 channelId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkConnection.HandleBytes (System.Byte[] buffer, Int32 receivedSize, Int32 channelId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkConnection.TransportRecieve (System.Byte[] bytes, Int32 numBytes, Int32 channelId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkServer.OnData (UnityEngine.Networking.NetworkConnection conn, Int32 receivedSize, Int32 channelId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkServer+ServerSimpleWrapper.OnData (UnityEngine.Networking.NetworkConnection conn, Int32 receivedSize, Int32 channelId) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkServerSimple.HandleData (Int32 connectionId, Int32 channelId, Int32 receivedSize, Byte error) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkServerSimple.Update () [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkServer.InternalUpdate () [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkServer.Update () [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkIdentity.UNetStaticUpdate () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
 
-NullReferenceException: Object reference not set to an instance of an object
-  at PlayerControl.Start () [0x00000] in <filename unknown>:0 
+Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 1525.
+Total: 0.824669 ms (FindLiveObjects: 0.060967 ms CreateObjectMapping: 0.018961 ms MarkObjects: 0.734822 ms  DeleteObjects: 0.009334 ms)
+
+Log: connection {1} has been disconnected by timeout; address {::ffff:127.0.0.1:50234}
+ServerDisconnected due to error: Timeout
  
-(Filename:  Line: -1)
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+ClientRpc call on un-spawned object
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.623972 ms
+
+Unloading 26 unused Assets to reduce memory usage. Loaded Objects now: 903.
+Total: 0.603260 ms (FindLiveObjects: 0.028296 ms CreateObjectMapping: 0.016044 ms MarkObjects: 0.490367 ms  DeleteObjects: 0.068552 ms)
+
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.289670 ms
+
+Unloading 35 unused Assets to reduce memory usage. Loaded Objects now: 427.
+Total: 0.364348 ms (FindLiveObjects: 0.031213 ms CreateObjectMapping: 0.024795 ms MarkObjects: 0.291128 ms  DeleteObjects: 0.016627 ms)
 
