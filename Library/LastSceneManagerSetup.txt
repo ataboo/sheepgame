@@ -1,4 +1,7 @@
 sceneSetups:
-- path: Assets/NetworkTesting.unity
+- path: Assets/Lobby.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/Lobby.unity
   isLoaded: 1
   isActive: 1
