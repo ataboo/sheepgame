@@ -22,6 +22,10 @@ public class PlayerControl : NetworkBehaviour {
 		speed = walkSpeed;
 	}
 
+	public override void OnStartClient () {
+		WakeUp ();
+	}
+
 	void Update () {
 		if (!isLocalPlayer || vertAxis == "") {
 			return;
@@ -63,5 +67,10 @@ public class PlayerControl : NetworkBehaviour {
 			Debug.LogError("DogController shouldn't be handling Non Player DogControl.");
 			break;
 		}
+	}
+
+	private void WakeUp() {
+		GetComponent<MeshRenderer> ().enabled = true;
+		GetComponent<Rigidbody> ().isKinematic = false;
 	}
 }

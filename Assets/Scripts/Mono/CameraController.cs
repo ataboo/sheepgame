@@ -12,19 +12,33 @@ public class CameraController : NetworkBehaviour
     private Vector3 offset;
 
     private Camera cam;
+	private EntitySpawner spawner;
 
     void Start()
     {
-        cam = GetComponent<Camera>();
+		cam = GetComponent<Camera>();
     }
 
-    void Update()
-    {
+	public override void OnStartClient() 
+	{
+		GameObject levelManager = GameObject.FindGameObjectWithTag ("LevelManager");
+
+		spawner = levelManager.GetComponent<EntitySpawner> ();
+
 		if (dogOne == null) {
 			FindLocalPlayers ();
 		}
 
+		Debug.Log ("Started Client");
+	}
+
+    void Update()
+    {
         CatchWideToggle();
+
+		if (dogOne == null) {
+			FindLocalPlayers ();
+		}
     }
 
 
@@ -36,18 +50,21 @@ public class CameraController : NetworkBehaviour
 	private void FindLocalPlayers() {
 		bool dogOneSet = false;
 		foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
+			if (!player.GetComponent<NetworkIdentity> ().isLocalPlayer) {
+				continue;
+			}
+				
 			PlayerControl control = player.GetComponent<PlayerControl> ();
+			spawner.RespawnDog (player);
 
-			if (player.GetComponent<NetworkIdentity>().isLocalPlayer) {
-				if (!dogOneSet) {
-					dogOne = player;
-					control.SetControls (PlayerControl.DogControl.DogOne);
-					dogOneSet = true;
-				} else {
-					dogTwo = player;
-					control.SetControls (PlayerControl.DogControl.DogTwo);
-					return;
-				}
+			if (!dogOneSet) {
+				dogOne = player;
+				control.SetControls (PlayerControl.DogControl.DogOne);
+				dogOneSet = true;
+			} else {
+				dogTwo = player;
+				control.SetControls (PlayerControl.DogControl.DogTwo);
+				return;
 			}
 		}
 	}

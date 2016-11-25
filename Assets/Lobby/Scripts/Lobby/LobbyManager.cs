@@ -165,6 +165,35 @@ namespace Prototype.NetworkLobby
             TryToAddPlayer();
         }
 
+//		public override void OnClientSceneChanged(NetworkConnection conn) 
+//		{
+//			base.OnClientSceneChanged(conn);
+//
+//			EntitySpawner spawner = GameObject.FindGameObjectWithTag ("LevelManager").GetComponent<EntitySpawner> ();
+//
+//			foreach (PlayerController playerController in ClientScene.localPlayers) {
+//				if (playerController.gameObject == null) {
+//					GameObject dogOne = spawner.SpawnNetDog("DogOne_" + playerController.playerControllerId);
+//					NetworkServer.AddPlayerForConnection(conn, dogOne, playerController.playerControllerId);
+//
+//					dogOne.GetComponent<PlayerControl> ().SetControls (PlayerControl.DogControl.DogOne);
+//				}
+//			}
+//
+//		Debug.Log("Ran spawn");
+//		}
+
+//		public override GameObject OnLobbyServerCreateGamePlayer (NetworkConnection conn, short playerControllerId) {
+//			EntitySpawner spawner = GameObject.FindGameObjectWithTag ("LevelManager").GetComponent<EntitySpawner> ();
+//
+//			GameObject dogOne = spawner.SpawnNetDog("DogOne_" + playerControllerId);
+//			//NetworkServer.AddPlayerForConnection(conn, dogOne, playerControllerId);
+//			
+//			dogOne.GetComponent<PlayerControl> ().SetControls (PlayerControl.DogControl.DogOne);
+//
+//			return dogOne;
+//		}
+
         public void RemovePlayer(LobbyPlayer player)
         {
             player.RemovePlayer();
@@ -217,20 +246,20 @@ namespace Prototype.NetworkLobby
             SetServerInfo("Hosting", networkAddress);
         }
 
-		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
-		{
-			base.OnMatchCreate(success, extendedInfo, matchInfo);
-            _currentMatchID = (System.UInt64)matchInfo.networkId;
-		}
-
-		public override void OnDestroyMatch(bool success, string extendedInfo)
-		{
-			base.OnDestroyMatch(success, extendedInfo);
-			if (_disconnectServer)
-            {
-                StopHost();
-            }
-        }
+//		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
+//		{
+//			base.OnMatchCreate(success, extendedInfo, matchInfo);
+//            _currentMatchID = (System.UInt64)matchInfo.networkId;
+//		}
+//
+//		public override void OnDestroyMatch(bool success, string extendedInfo)
+//		{
+//			base.OnDestroyMatch(success, extendedInfo);
+//			if (_disconnectServer)
+//            {
+//                StopHost();
+//            }
+//        }
 
         //allow to handle the (+) button to add/remove player
         public void OnPlayersNumberModified(int count)

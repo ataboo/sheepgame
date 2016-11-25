@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class SheepController : NetworkBehaviour {
+
+public class SheepController : NetworkToggleable {
 	public enum SheepState
 	{
 		Idle,
@@ -36,28 +37,27 @@ public class SheepController : NetworkBehaviour {
 	private Renderer rendComponent;
 	private bool paused = false;
 
-	void Awake() {
-		NetworkIdentity netId = GetComponent<NetworkIdentity> ();
 
-		if (!GetComponent<NetworkIdentity> ()) {
-			enabled = false;
-		}
+	void Start() {
 
 		navAgent = GetComponent <NavMeshAgent>();
 		rb = GetComponent<Rigidbody>();
 		rendComponent = GetComponentInChildren<Renderer> ();
 	}
 
+	[Server]
 	void Update () {
 		UpdateMovement();
 
 		ColorizeBehavior();
 	}
 
+	[Server]
 	void OnPause() {
 		this.paused = true;
 	}
 
+	[Server]
 	void OnResume() {
 		this.paused = false;
 	}

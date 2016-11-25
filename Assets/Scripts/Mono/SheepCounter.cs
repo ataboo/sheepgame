@@ -3,13 +3,10 @@
 public interface CountListener {
 	void OnCountChange(int newCount);
 }
-public class SheepCounter : MonoBehaviour {
+public class SheepCounter : NetworkToggleable {
 	private CountListener countListener;
-	private int sheepCount;
+	private int sheepCount = 0;
 
-	void Awake() {
-		sheepCount = 0;
-	}
 	void Start() {
 		SendCount();
 	}

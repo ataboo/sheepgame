@@ -16,16 +16,13 @@ public class EntitySpawner : NetworkBehaviour {
 	private UIInterface uiInterface;
 	private CameraController camController;
 
-	public void Awake() {
+	public override void OnStartClient() {
 		GetSpawnPoints();
-		camController = GameObject.Find("Camera").GetComponent<CameraController>();
-
-		//InitialSpawn();
+		camController = GameObject.FindGameObjectWithTag("Camera").GetComponent<CameraController>();
 	}
 
 	public override void OnStartServer() {
-		Debug.Log ("Started Server");
-
+		GetSpawnPoints();
 		InitialSpawn ();
 	}
 
@@ -47,6 +44,7 @@ public class EntitySpawner : NetworkBehaviour {
 
 		return dog;
 	}
+
 	public void RespawnDog(GameObject dog) {
 		dog.transform.position = MakeSpawnPoint(dogSpawnOne);
 
