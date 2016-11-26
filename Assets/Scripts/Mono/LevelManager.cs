@@ -1,60 +1,48 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviour {
-	private EntitySpawner entitySpawner;
+public class LevelManager : NetworkToggleable, CountListener {
+	[SyncVar]
+	public int totalSheep = 0;
+	[SyncVar]
+	public int sheepInGoal = 0;
+	[SyncVar]
+	public int deadSheep = 0;
+
 	private UIInterface uiInterface;
-	private int totalSheep = 0;
-	private int sheepInGoal = 0;
-	private int deadSheep = 0;
+	private EntitySpawner spawner;
 	private float startTime;
 	private bool gameOver = false;
 	private bool paused = false;
 
 	// Use this for initialization
-	void Start() {
-		this.entitySpawner = GetComponent<EntitySpawner>();
+	public override void ServerAwake() {
 		this.uiInterface = GetComponent<UIInterface>();
+		this.spawner = GetComponent<EntitySpawner> ();
+		SheepCounter sheepCounter = GameObject.FindGameObjectWithTag ("SheepCounter").GetComponent<SheepCounter> ();
 
-		deadSheep = 0;
-		startTime = Time.time;
-		totalSheep = entitySpawner.GetSheepCount();
+		sheepCounter.SetListener (this);
+	}
+
+	public override void ServerStart() {
+		InitValues ();
+		UpdateHud ();
+	}
+
+	public override void ServerUpdate() {
+		if (gameOver) {
+			// showScreen
+		}
+
 		UpdateHud();
 	}
 
-	void Update() {
-		if (gameOver) {
-			return;
-		}
-
-		if(Input.GetButtonDown("Cancel")) {
-			TogglePause();
-		}
-	}
-
 	public void IsKill(GameObject gameObject, DeathCheck deathCheck) {
-		if (deathCheck.respawnable) {
-			entitySpawner.RespawnDog(gameObject);
-		} else {
-			GameObject.Destroy(gameObject);
-		}
-
-		// if (deathCheck.IsSheep()) {
-		// 	deadSheep++;
-		// 	UpdateHud();
-		// }
+		
 	}
 
 	public void UpdateGoal(int sheepInGoal) {
 		this.sheepInGoal = sheepInGoal;
-
-		UpdateHud();
-	}
-
-	public void TogglePause() {
-		this.paused = !paused;
-		SetPause(paused);
-		uiInterface.ShowPauseScreen(paused);
 	}
 
 	public void ExitToMenu() {
@@ -62,6 +50,26 @@ public class LevelManager : MonoBehaviour {
 		SceneManager.LoadScene("MenuScene");
 	}
 
+	//============== CountListener =============
+	public void OnCountChange(int newCount) {
+		this.totalSheep = newCount;
+	}
+
+	//============== DeathListener ===========
+	public void IsKill(GameObject gameObject, bool respawnable) {
+		if (respawnable) {
+			spawner.RespawnDog(gameObject);
+		} else {
+			GameObject.Destroy(gameObject);
+			deadSheep++;
+		}
+	}
+
+	private void InitValues() {
+		deadSheep = 0;
+		startTime = Time.time;
+	}
+	
 	private void UpdateHud() {
 		uiInterface.UpdateHud(totalSheep, sheepInGoal, deadSheep);
 

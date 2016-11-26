@@ -72,6 +72,7 @@
      <Compile Include="Assets\Scripts\Network\PlayerMover.cs" />
      <Compile Include="Assets\Scripts\Network\SheepNetworkManager.cs" />
      <Compile Include="Assets\Scripts\Utility\AtaUtility.cs" />
+     <Compile Include="Assets\SheepDisplay.cs" />
      <None Include="Assets\Lobby\Documentation.txt" />
      <None Include="Assets\Lobby\Instruction.txt" />
      <None Include="Assets\Fonts\OpenSans\License!.txt" />

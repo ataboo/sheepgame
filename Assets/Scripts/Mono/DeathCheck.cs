@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public interface EntityDelegate {
+public interface DeathListener {
 	void IsKill(GameObject gameObject, bool imortal);
 }
+
 public class DeathCheck : MonoBehaviour {
 	public bool respawnable = false;
 	public float deathHeight = -20f;
-	private EntityDelegate entDelegate;
+	private DeathListener deathListener;
 
 	public void Awake() 
 	{
@@ -24,10 +25,10 @@ public class DeathCheck : MonoBehaviour {
 	}
 
 	private void isKill() {
-		if (entDelegate == null) {
+		if (deathListener == null) {
 			Debug.LogError("DeathCheck has no entitydelegate.");
 		} else {
-			entDelegate.IsKill(gameObject, respawnable);
+			deathListener.IsKill(gameObject, respawnable);
 		}
 	}
 }

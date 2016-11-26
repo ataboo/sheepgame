@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
-public class EntitySpawner : NetworkBehaviour {
+public class EntitySpawner : NetworkToggleable {
 
 	private int sheepCount = 12;
 	public Vector2 spawnRadRange = new Vector2(2f, 10f);
@@ -16,13 +16,12 @@ public class EntitySpawner : NetworkBehaviour {
 	private UIInterface uiInterface;
 	private CameraController camController;
 
-	public override void OnStartClient() {
+	public override void BothAwake() {
 		GetSpawnPoints();
 		camController = GameObject.FindGameObjectWithTag("Camera").GetComponent<CameraController>();
 	}
 
-	public override void OnStartServer() {
-		GetSpawnPoints();
+	public override void ServerStart() {
 		InitialSpawn ();
 	}
 
@@ -46,6 +45,14 @@ public class EntitySpawner : NetworkBehaviour {
 	}
 
 	public void RespawnDog(GameObject dog) {
+		if (dogSpawnOne == null) {
+			GetSpawnPoints ();
+
+			if (dogSpawnOne == null) {
+				return;
+			}
+		}
+
 		dog.transform.position = MakeSpawnPoint(dogSpawnOne);
 
 		dog.GetComponent<Rigidbody>().velocity = Vector3.zero;

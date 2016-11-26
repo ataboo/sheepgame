@@ -7,8 +7,8 @@ public class SheepCounter : NetworkToggleable {
 	private CountListener countListener;
 	private int sheepCount = 0;
 
-	void Start() {
-		SendCount();
+	override public void ServerStart() {
+		SendCount ();
 	}
 
 	public void OnTriggerEnter(Collider collider) {
@@ -27,6 +27,12 @@ public class SheepCounter : NetworkToggleable {
 			sheepCount--;
 			SendCount();
 		}
+	}
+
+	public void SetListener(CountListener listener) {
+		this.countListener = listener;
+
+		listener.OnCountChange (sheepCount);
 	}
 
 	private void SendCount() {

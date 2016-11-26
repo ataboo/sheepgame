@@ -14,12 +14,12 @@ public class SheepController : NetworkToggleable {
 		Ballistic,
 		Recovering
 	}
+
 	NavMeshAgent navAgent;
 
 	public float maxFriendRange = 100f;
 	public float minFriendRange = 4f;
 	public float maxEnemyRange = 30f;
-	public SheepState sheepState = SheepState.Idle;
 
 	public float walkingSpeed = 5;
 	public float runningSpeed = 15;
@@ -31,25 +31,31 @@ public class SheepController : NetworkToggleable {
 
 	public Vector2 eatTimeRange = new Vector2(3.0f, 4.0f);
 
+	public SheepState sheepState = SheepState.Idle;
+
 	private float actionTimeout = 0f;
 
 	private Rigidbody rb;
 	private Renderer rendComponent;
+	private SheepDisplay sheepDisplay;
 	private bool paused = false;
 
 
-	void Start() {
-
+	public override void ServerAwake() {
 		navAgent = GetComponent <NavMeshAgent>();
 		rb = GetComponent<Rigidbody>();
 		rendComponent = GetComponentInChildren<Renderer> ();
+		sheepDisplay = GetComponent<SheepDisplay> ();
 	}
 
-	[Server]
-	void Update () {
+	public override void ServerStart() {
+		
+	}
+		
+	public override void ServerUpdate () {
 		UpdateMovement();
 
-		ColorizeBehavior();
+		sheepDisplay.sheepState = this.sheepState;
 	}
 
 	[Server]
@@ -60,30 +66,6 @@ public class SheepController : NetworkToggleable {
 	[Server]
 	void OnResume() {
 		this.paused = false;
-	}
-
-	private void ColorizeBehavior() {
-		Color color;
-
-		switch (sheepState) {
-			case SheepState.Wandering:
-				color = Color.yellow;
-				break;
-			case SheepState.Herding:
-				color = Color.blue;
-				break;
-			case SheepState.Panicking:
-				color = Color.red;
-				break;
-			case SheepState.Eating:
-				color = Color.green;
-				break;
-			default:
-				color = Color.black;
-				break;
-		}
-
-		rendComponent.material.color = color;
 	}
 
 	private void UpdateMovement() {
