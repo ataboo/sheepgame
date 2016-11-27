@@ -67,12 +67,13 @@
      <Compile Include="Assets\Scripts\Mono\SheepCounter.cs" />
      <Compile Include="Assets\Scripts\Mono\Spooker.cs" />
      <Compile Include="Assets\Scripts\Mono\UIInterface.cs" />
+     <Compile Include="Assets\Scripts\Network\DogDisplay.cs" />
      <Compile Include="Assets\Scripts\Network\NetworkToggleable.cs" />
      <Compile Include="Assets\Scripts\Network\PlayerControl.cs" />
      <Compile Include="Assets\Scripts\Network\PlayerMover.cs" />
+     <Compile Include="Assets\Scripts\Network\SheepDisplay.cs" />
      <Compile Include="Assets\Scripts\Network\SheepNetworkManager.cs" />
      <Compile Include="Assets\Scripts\Utility\AtaUtility.cs" />
-     <Compile Include="Assets\SheepDisplay.cs" />
      <None Include="Assets\Lobby\Documentation.txt" />
      <None Include="Assets\Lobby\Instruction.txt" />
      <None Include="Assets\Fonts\OpenSans\License!.txt" />

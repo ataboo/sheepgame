@@ -10,9 +10,12 @@ using System.Collections;
 public abstract class NetworkToggleable : NetworkBehaviour {
 	public bool serverOnly = false;
 	private bool initialized = false;
+	private bool pastPreStart = false;
 
-	private bool _runningOnServer = false;
-	public bool runningOnServer;
+	protected bool _runningOnServer = false;
+
+	protected LevelManager levelManager;
+	protected IGameState iGameState;
 
 	[Server]
 	public virtual void ServerAwake () {}
@@ -27,7 +30,7 @@ public abstract class NetworkToggleable : NetworkBehaviour {
 
 	public virtual void BothStart () {}
 
-	public virtual void BothUpdate() {}
+	public virtual void BothUpdate () {}
 
 	public override void OnStartServer() {
 		_runningOnServer = true;
@@ -36,18 +39,15 @@ public abstract class NetworkToggleable : NetworkBehaviour {
 	public override void PreStartClient() {
 		NetworkIdentity identity = GetComponent<NetworkIdentity> ();
 
+		//Debug.Log ("Identity: " + identity);
 		if (!identity.isServer && serverOnly) {
 			enabled = false;
 			return;
 		}
 
-		initialized = true;
+		AttemptInit ();
 
-		if (_runningOnServer) {
-			this.ServerAwake ();
-		}
-
-		this.BothAwake ();
+		pastPreStart = true;
 	}
 
 	public override void OnStartClient() {
@@ -59,15 +59,42 @@ public abstract class NetworkToggleable : NetworkBehaviour {
 	}
 
 	public void Update() {
-		runningOnServer = _runningOnServer;
+		if (!pastPreStart) {
+			return;
+		}
 
-		if (initialized && _runningOnServer) {
+		if (initialized) {
+			if (iGameState.IsPaused ()) {
+				return;
+			}
+
 			if (_runningOnServer) {
 				ServerUpdate ();
 			}
 
 			BothUpdate ();
+		} else {
+			AttemptInit ();
 		}
+	}
+
+	private void AttemptInit() {
+		GameObject levelManObj = GameObject.FindGameObjectWithTag ("LevelManager");
+
+		if (levelManObj == null) {
+			return;
+		}
+
+		this.levelManager = levelManObj.GetComponent<LevelManager> ();
+		this.iGameState = (IGameState) levelManager;
+
+		if (_runningOnServer) {
+			this.ServerAwake ();
+		}
+
+		this.BothAwake ();
+
+		initialized = true;
 	}
 
 }

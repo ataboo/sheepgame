@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class CameraController : NetworkBehaviour
+public class CameraController : NetworkToggleable
 {
     public GameObject dogOne;
     public GameObject dogTwo;
@@ -14,25 +14,23 @@ public class CameraController : NetworkBehaviour
     private Camera cam;
 	private EntitySpawner spawner;
 
-    void Start()
+    public override void BothAwake()
     {
 		cam = GetComponent<Camera>();
-    }
 
-	public override void OnStartClient() 
-	{
 		GameObject levelManager = GameObject.FindGameObjectWithTag ("LevelManager");
 
 		spawner = levelManager.GetComponent<EntitySpawner> ();
+    }
 
+	public override void BothStart() 
+	{
 		if (dogOne == null) {
 			FindLocalPlayers ();
 		}
-
-		Debug.Log ("Started Client");
 	}
 
-    void Update()
+	public override void BothUpdate()
     {
         CatchWideToggle();
 
@@ -55,7 +53,7 @@ public class CameraController : NetworkBehaviour
 			}
 				
 			PlayerControl control = player.GetComponent<PlayerControl> ();
-			spawner.RespawnDog (player);
+			spawner.RespawnDog (control);
 
 			if (!dogOneSet) {
 				dogOne = player;

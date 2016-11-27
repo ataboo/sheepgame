@@ -2,22 +2,19 @@
 using UnityEngine.Networking;
 
 public interface DeathListener {
-	void IsKill(GameObject gameObject, bool imortal);
+	void IsKill(GameObject gameObject, bool respawnable);
 }
 
-public class DeathCheck : MonoBehaviour {
+public class DeathCheck : NetworkToggleable {
 	public bool respawnable = false;
 	public float deathHeight = -20f;
 	private DeathListener deathListener;
 
-	public void Awake() 
-	{
-		if (!GetComponent<NetworkIdentity> ().isServer) {
-			enabled = false;
-		}
+	override public void ServerAwake() {
+		this.deathListener = (DeathListener) GameObject.FindGameObjectWithTag ("LevelManager").GetComponent<LevelManager> ();
 	}
 
-	public void FixedUpdate () {
+	override public void ServerUpdate () {
 
 		if (transform.position.y < deathHeight) {
 			isKill();

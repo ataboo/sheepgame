@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+using Prototype.NetworkLobby;
 
-public class UIInterface : MonoBehaviour {
+public interface UIListener {
+	void UpdateHud(int total, int inGoal, int dead);
+	void ShowEndScreen (int total, int inGoal, int dead, float runTime);
+}
+
+public class UIInterface : NetworkToggleable, UIListener {
 	public class GameSummary {
 		const float WinRatio = 0.75f;
 		public int sheepInGoal;
@@ -59,29 +66,35 @@ public class UIInterface : MonoBehaviour {
 	public Text endTitle;
 	public Text endSubtitle;
 	public Text endDetail;
-	public GameObject pausePanel;
 
-	public void UpdateHud(int totalSheep, int sheepInGoal, int deadSheep) {
-		int wildCount = totalSheep - sheepInGoal - deadSheep;
+	//============== UIListener =====================
 
-		hudText.text = string.Format("Sheep Count\nInside Goal: {0}\nIn The Wild: {1}\nDeparted: {2}", sheepInGoal, wildCount, deadSheep);
+	public void UpdateHud(int total, int inGoal, int dead) {
+		int wildCount = total - inGoal - dead;
+
+		hudText.text = string.Format("Sheep Count\nInside Goal: {0}\nIn The Wild: {1}\nDeparted: {2}", inGoal, wildCount, dead);
 	}
 
-	public void ShowEndScreen(int totalSheep, int sheepInGoal, int deadSheep, float runTime) {
-		Debug.Log(string.Format("Showed end screen!, Total: {0} Goal: {1}, Dead: {2}", totalSheep, sheepInGoal, deadSheep));
+	private void setHud(int total, int inGoal, int dead) {
+		
+	}
+		
+	public void ShowEndScreen(int total, int inGoal, int dead, float runTime) {
+		Debug.Log(string.Format("Showed end screen!, Total: {0} Goal: {1}, Dead: {2}", total, inGoal, dead));
 
-		GameSummary summary = new GameSummary(totalSheep, sheepInGoal, deadSheep, runTime);
+		GameSummary summary = new GameSummary(total, inGoal, dead, runTime);
 
 		endTitle.text = summary.Title();
 		endSubtitle.text = summary.Subtitle();
 		endDetail.text = summary.Details();
-		
-		pausePanel.SetActive(false);
-		endPanel.SetActive(true);
-	}
 
-	public void ShowPauseScreen(bool show) {
-		pausePanel.SetActive(show);
+		endPanel.SetActive(true);
+
+		GameObject topPanelObj = GameObject.FindGameObjectWithTag ("TopPanel");
+
+		if (topPanelObj != null) {
+			topPanelObj.GetComponent<LobbyTopPanel> ().ToggleVisibility(true);
+		}
 	}
 
 	public void HideEndScreen() {

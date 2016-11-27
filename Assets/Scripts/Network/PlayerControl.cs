@@ -1,7 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerControl : NetworkBehaviour {
+public enum DogState {
+	Normal,
+	Spooking,
+	Running,
+	Dead
+}
+
+public class PlayerControl : NetworkToggleable {
 	public enum DogControl {
 		DogOne,
 		DogTwo,
@@ -12,21 +19,32 @@ public class PlayerControl : NetworkBehaviour {
 	public string horizAxis;
 	public string activateAxis;
 	public string runAxis;
-	float walkSpeed = 6.0f;
-	float runSpeed = 10f;
+	public DogState dogState = DogState.Normal;
+
+	float walkSpeed = 8.0f;
+	float runSpeed = 14f;
 	private float speed;
 	private bool running = false;
 
-	public override void OnStartLocalPlayer() 
+	[SyncVar(hook="OnAwakeChange")]
+	public bool isAwake = false;
+
+	private Rigidbody rb;
+	private Spooker spooker;
+	private Renderer rendComp;
+
+	public override void BothAwake () 
 	{
 		speed = walkSpeed;
+		this.rb = GetComponent<Rigidbody> ();
+		this.spooker = GetComponent<Spooker> ();
+		this.rendComp = GetComponentInChildren<Renderer> ();
 	}
 
-	public override void OnStartClient () {
-		WakeUp ();
+	public override void BothStart () {
 	}
 
-	void Update () {
+	public override void BothUpdate () {
 		if (!isLocalPlayer || vertAxis == "") {
 			return;
 		}
@@ -34,6 +52,8 @@ public class PlayerControl : NetworkBehaviour {
 		Move();
 
 		ProcessInput();
+
+		this.dogState = UpdateState ();
 	}
 
 	void Move() {
@@ -42,10 +62,38 @@ public class PlayerControl : NetworkBehaviour {
 		transform.position += movement;
 	}
 
+	private DogState UpdateState() {
+		if (spooker.active) {
+			return DogState.Spooking;
+		}
+
+		if (running) {
+			return DogState.Running;
+		}
+
+		return DogState.Normal;
+	}
+
 	void ProcessInput() {
 		if (Input.GetButtonDown(runAxis)) {
 			running = !running;
 			speed = running ? runSpeed : walkSpeed;
+		}
+
+		if (Input.GetButton (activateAxis)) {
+			ActivateSpook ();
+		}
+	}
+
+	private void ActivateSpook() {
+		if (spooker.active) {
+			return;
+		}
+
+		if (_runningOnServer) {
+			spooker.Activate (1f);
+		} else {
+			spooker.CmdActivate (1f);
 		}
 	}
 		
@@ -69,8 +117,40 @@ public class PlayerControl : NetworkBehaviour {
 		}
 	}
 
-	private void WakeUp() {
-		GetComponent<MeshRenderer> ().enabled = true;
-		GetComponent<Rigidbody> ().isKinematic = false;
+	public void Teleport(Vector3 position) {
+		Debug.Log ("Called Teleport");
+
+		this.transform.position = position;
+		GetComponent<Rigidbody> ().velocity = Vector3.zero;
+
+		//this.isAwake = true;
+		if (_runningOnServer) {
+			this.isAwake = true;
+			levelManager.RebuildEntityList ();
+		} else {
+			CmdSetActive (true);
+			SyncAwake ();
+		}
+	}
+
+	[Command]
+	private void CmdSetActive(bool active) {
+		this.isAwake = active;
+
+		levelManager.RebuildEntityList ();
+	}
+
+	private void SyncAwake() {
+		foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
+			PlayerControl pc = player.GetComponent<PlayerControl> ();
+			pc.OnAwakeChange (pc.isAwake);
+		}
+	}
+
+	public void OnAwakeChange(bool awake) {
+
+		this.isAwake = awake;
+		//GetComponent<MeshRenderer> ().enabled = true;
+		GetComponent<Rigidbody> ().isKinematic = !awake;
 	}
 }

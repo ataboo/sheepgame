@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 public class EntitySpawner : NetworkToggleable {
 
-	private int sheepCount = 12;
+	public int sheepCount = 12;
 	public Vector2 spawnRadRange = new Vector2(2f, 10f);
 	public float spawnCheckRad = 1f;
 	public GameObject sheepPrefab;
@@ -18,63 +18,36 @@ public class EntitySpawner : NetworkToggleable {
 
 	public override void BothAwake() {
 		GetSpawnPoints();
-		camController = GameObject.FindGameObjectWithTag("Camera").GetComponent<CameraController>();
+		GameObject camObj = GameObject.FindGameObjectWithTag ("Camera");
+		camController = camObj.GetComponent<CameraController>();
 	}
 
 	public override void ServerStart() {
 		InitialSpawn ();
 	}
-
-	// public GameObject SpawnDog(PlayerControl.DogControl dogControl, string name, bool camFollow = false) {
-	// 	GameObject dog = (GameObject) GameObject.Instantiate(dogPrefab, MakeSpawnPoint(dogSpawnOne), Quaternion.Euler(0, 0, 0));
-	// 	dog.name = name;
-	// 	//dog.GetComponent<DogController>().SetControl(dogControl);
-
-	// 	if (camFollow) {
-	// 		camController.RpcFollowDog(dog, false);
-	// 	}
-
-	// 	return dog;
-	// }
-
+		
 	public GameObject SpawnNetDog(string name) {
 		GameObject dog = (GameObject) GameObject.Instantiate(netDogPrefab, MakeSpawnPoint(dogSpawnOne), Quaternion.Euler(0, 0, 0));
 		dog.name = name;
 
 		return dog;
 	}
-
-	public void RespawnDog(GameObject dog) {
+		
+	public void RespawnDog(PlayerControl playerControl) {
 		if (dogSpawnOne == null) {
 			GetSpawnPoints ();
 
 			if (dogSpawnOne == null) {
+				Debug.LogError ("Couldn't find dog spawn");
+
 				return;
 			}
 		}
+  
+		Vector3 dogSpawn = MakeSpawnPoint (dogSpawnOne);
 
-		dog.transform.position = MakeSpawnPoint(dogSpawnOne);
-
-		dog.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		playerControl.Teleport (dogSpawn);
 	}
-
-//[Command]
-//	public void CmdRequestSpawn() {
-//		GameObject dogOne = SpawnNetDog("DogOne_" + netId);
-//	
-//		if (playerControllerId > 0) {
-//			NetworkServer.AddPlayerForConnection(connectionToClient, dogOne, GetComponent<NetworkIdentity>().playerControllerId);
-//
-//		} else {
-//			ClientScene.AddPlayer(0);
-//
-//		}
-//	        dogOne.GetComponent<PlayerControl>().RpcSetControl(PlayerControl.DogControl.DogOne);
-//
-//        
-//        Debug.Log("Ran spawn");
-//
-//	}
 	
 	private void SpawnSheep(Transform basePosition) {
 		Vector3 spawnPos = MakeSpawnPoint(basePosition);

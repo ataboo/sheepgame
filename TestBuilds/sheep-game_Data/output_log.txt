@@ -16,13 +16,17 @@ Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Dat
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.143 seconds
+- Completed reload, in  0.156 seconds
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
+UnloadTime: 1.352378 ms
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 2100 -> priority: 1 
+  Thread -> id: 2184 -> priority: 1 
 Initialize engine version: 5.4.3f1 (01f4c123905a)
 GfxDevice: creating device client; threaded=1
 Direct3D:
@@ -33,7 +37,6 @@ Direct3D:
 Begin MonoManager ReloadAssembly
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.dll into Unity Child Domain
-UnloadTime: 0.745033 ms
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Assembly-CSharp.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.UI.dll (this message is harmless)
@@ -42,35 +45,32 @@ Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Dat
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.042 seconds
+- Completed reload, in  0.039 seconds
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 5.194229 ms
+
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 631.
+Total: 0.471990 ms (FindLiveObjects: 0.079929 ms CreateObjectMapping: 0.018377 ms MarkObjects: 0.365223 ms  DeleteObjects: 0.008167 ms)
+
 <RI> Initialized touch support.
+UnloadTime: 1.397885 ms
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 23b0 -> priority: 1 
-  Thread -> id: 2c28 -> priority: 1 
+  Thread -> id: 20f4 -> priority: 1 
+  Thread -> id: 550 -> priority: 1 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 5.365172 ms
+UnloadTime: 4.771246 ms
 
-Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 627.
-Total: 0.452154 ms (FindLiveObjects: 0.068552 ms CreateObjectMapping: 0.027712 ms MarkObjects: 0.346554 ms  DeleteObjects: 0.009043 ms)
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 631.
+Total: 0.408980 ms (FindLiveObjects: 0.048715 ms CreateObjectMapping: 0.033838 ms MarkObjects: 0.318841 ms  DeleteObjects: 0.007001 ms)
 
-UnloadTime: 0.730739 ms
-Setting up 2 worker threads for Enlighten.
-  Thread -> id: 2f50 -> priority: 1 
-  Thread -> id: 1bfc -> priority: 1 
 DontDestroyOnLoad only work for root GameObjects or components on root GameObjects.
  
 (Filename:  Line: 386)
-
-Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 5.116633 ms
-
-Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 627.
-Total: 0.424441 ms (FindLiveObjects: 0.049882 ms CreateObjectMapping: 0.029171 ms MarkObjects: 0.336927 ms  DeleteObjects: 0.007876 ms)
 
 DontDestroyOnLoad only work for root GameObjects or components on root GameObjects.
  
@@ -86,304 +86,220 @@ DontDestroyOnLoad only work for root GameObjects or components on root GameObjec
 
 Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
 Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.416565 ms
-UnloadTime: 0.519539 ms
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Lin: nl42)
-n
-g 4 unused Assets to redOce PrmemoryrtCslgen. 
- 
-LFiadeed Ob C:/ts now: 929/.n
-ty/taluil d/24r765acts/(gendLivratObje/cts: on/0run10i ms CityEneObjeDctMgappinng: 0e..c4p L171:  2ms
- 
-MarkObjects: 1.115216 ms  DeleteObjeOtsSt a.rt04l19 m
-s)
-(F
+UnloadTime: 0.434067 ms
+UnloadTime: 0.439902 ms
 
-lename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 4 unused Assets to reduceSmemhey pCouster has no listener.
+ L
+(FadlenamOe: Cts/b nods: 8ve6.
+Totalb: ld/.3rt34factms/g(FinnraLive/cbjects:run.06me/U nityEngteibjeDctMappiingn: 0.0341pp0 LsiMaerk bj2e
+
+s: 1.206230 ms  DeleteObjects: 0.020419 ms)
+
+Called Teleport
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Exception in OnStartClient:Object reference not set to an instance of an object   at PlayerControl.Teleport (Vector3 position) [0x00000] in <filename unknown>:0 
+  at EntitySpawner.RespawnDog (.PlayerControl playerControl) [0x00000] in <filename unknown>:0 
+  at CameraController.FindLocalPlayers () [0x00000] in <filename unknown>:0 
+  at CameraController.BothStart () [0x00000] in <filename unknown>:0 
+  at NetworkToggleable.OnStartClient () [0x00000] in <filename unknown>:0 
+  at UnityEngine.Networking.NetworkIdentity.OnStartClient () [0x00000] in <filename unknown>:0 
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+
+Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 1021.
+Total: 1.336625 ms (FindLiveObjects: 0.074094 ms CreateObjectMapping: 0.037047 ms MarkObjects: 1.208564 ms  DeleteObjects: 0.016044 ms)
+
+Called Teleport
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran Rebuild local.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Called Teleport
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran Rebuild local.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
 SheepCounter has no listener.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-On Server Start
+SheepCounter has no listener.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-On PreStartClient
+SheepCounter has no listener.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-OnStartClient
+SheepCounter has no listener.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-On Server Start
+Showed end screen!, Total: 2 Goal: 2, Dead: 0
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-On PreStartClient
+Showed end screen!, Total: 2 Goal: 2, Dead: 0
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-OnStartClient
+Showed end screen!, Total: 2 Goal: 1, Dead: 0
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-On Server Start
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+ClientRpc call on un-spawned object
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+UnloadTime: 1.188435 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 14 unused Assets to reduce memory usage. Loaded Objects now: 668.
+Total: 1.139428 ms (FindLiveObjects: 0.050174 ms CreateObjectMapping: 0.032671 ms MarkObjects: 0.920060 ms  DeleteObjects: 0.135646 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.273917 ms
 
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.955941 ms (FindLiveObjects: 0.046382 ms CreateObjectMapping: 0.033838 ms MarkObjects: 0.864635 ms  DeleteObjects: 0.010793 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.653727 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.988029 ms (FindLiveObjects: 0.052508 ms CreateObjectMapping: 0.032380 ms MarkObjects: 0.891764 ms  DeleteObjects: 0.010501 ms)
 
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.340719 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 1.086336 ms (FindLiveObjects: 0.048715 ms CreateObjectMapping: 0.031504 ms MarkObjects: 0.994738 ms  DeleteObjects: 0.010501 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.691649 ms
 
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 14 unused Assets to reduce memory usage. Loaded Objects now: 909.
+Total: 1.316205 ms (FindLiveObjects: 0.064176 ms CreateObjectMapping: 0.035588 ms MarkObjects: 1.086920 ms  DeleteObjects: 0.128645 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.105589 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 714.
+Total: 0.896431 ms (FindLiveObjects: 0.042589 ms CreateObjectMapping: 0.030629 ms MarkObjects: 0.812418 ms  DeleteObjects: 0.009918 ms)
 
-On Server Start
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.601219 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 714.
+Total: 1.014867 ms (FindLiveObjects: 0.056883 ms CreateObjectMapping: 0.036172 ms MarkObjects: 0.909558 ms  DeleteObjects: 0.011376 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.602969 ms
 
-Started Client
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.987446 ms (FindLiveObjects: 0.052508 ms CreateObjectMapping: 0.033546 ms MarkObjects: 0.888555 ms  DeleteObjects: 0.012251 ms)
 
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.610845 ms
 
-Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 1551.
-Total: 0.843631 ms (FindLiveObjects: 0.067093 ms CreateObjectMapping: 0.016627 ms MarkObjects: 0.747950 ms  DeleteObjects: 0.011376 ms)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.968776 ms (FindLiveObjects: 0.052799 ms CreateObjectMapping: 0.034130 ms MarkObjects: 0.870761 ms  DeleteObjects: 0.010501 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.610553 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 1.066208 ms (FindLiveObjects: 0.119310 ms CreateObjectMapping: 0.032380 ms MarkObjects: 0.903724 ms  DeleteObjects: 0.010209 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.622805 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 1.113174 ms (FindLiveObjects: 0.048715 ms CreateObjectMapping: 0.078178 ms MarkObjects: 0.974319 ms  DeleteObjects: 0.011376 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.714986 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.977236 ms (FindLiveObjects: 0.049299 ms CreateObjectMapping: 0.032088 ms MarkObjects: 0.885055 ms  DeleteObjects: 0.010501 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.629515 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.998822 ms (FindLiveObjects: 0.051924 ms CreateObjectMapping: 0.032671 ms MarkObjects: 0.902849 ms  DeleteObjects: 0.011085 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.623972 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.962067 ms (FindLiveObjects: 0.048715 ms CreateObjectMapping: 0.032088 ms MarkObjects: 0.871052 ms  DeleteObjects: 0.009626 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.618721 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 1.076418 ms (FindLiveObjects: 0.061551 ms CreateObjectMapping: 0.034713 ms MarkObjects: 0.966442 ms  DeleteObjects: 0.013127 ms)
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.356472 ms
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 1.113465 ms (FindLiveObjects: 0.053675 ms CreateObjectMapping: 0.032088 ms MarkObjects: 1.015742 ms  DeleteObjects: 0.010793 ms)
 
-On PreStartClient
+NetworkLobbyManager can't accept new connection [hostId: -1 connectionId: 0 isReady: False channel count: 0], not in lobby and game already in progress.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.359681 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 912.
+Total: 1.179101 ms (FindLiveObjects: 0.057759 ms CreateObjectMapping: 0.032963 ms MarkObjects: 1.073501 ms  DeleteObjects: 0.014293 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.778580 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 717.
+Total: 0.936104 ms (FindLiveObjects: 0.047257 ms CreateObjectMapping: 0.030921 ms MarkObjects: 0.846840 ms  DeleteObjects: 0.010501 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.605594 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 717.
+Total: 0.956524 ms (FindLiveObjects: 0.051633 ms CreateObjectMapping: 0.031213 ms MarkObjects: 0.863176 ms  DeleteObjects: 0.009918 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.613470 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 717.
+Total: 0.963817 ms (FindLiveObjects: 0.045798 ms CreateObjectMapping: 0.031796 ms MarkObjects: 0.876303 ms  DeleteObjects: 0.009626 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.369307 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.958274 ms (FindLiveObjects: 0.046965 ms CreateObjectMapping: 0.031213 ms MarkObjects: 0.869594 ms  DeleteObjects: 0.009918 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.345970 ms
 
-On PreStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.975485 ms (FindLiveObjects: 0.047840 ms CreateObjectMapping: 0.030921 ms MarkObjects: 0.880971 ms  DeleteObjects: 0.015169 ms)
 
-OnStartClient
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.331676 ms
 
-Started Client
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 715.
+Total: 0.969943 ms (FindLiveObjects: 0.049299 ms CreateObjectMapping: 0.032380 ms MarkObjects: 0.877762 ms  DeleteObjects: 0.009626 ms)
 

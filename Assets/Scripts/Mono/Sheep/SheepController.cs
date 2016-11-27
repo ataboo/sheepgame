@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
+public enum SheepState
+{
+	Idle,
+	Panicking,
+	Herding,
+	Wandering,
+	Eating,
+	Dead,
+	Ballistic,
+	Recovering
+}
 
 public class SheepController : NetworkToggleable {
-	public enum SheepState
-	{
-		Idle,
-		Panicking,
-		Herding,
-		Wandering,
-		Eating,
-		Dead,
-		Ballistic,
-		Recovering
-	}
 
 	NavMeshAgent navAgent;
 
@@ -37,35 +37,27 @@ public class SheepController : NetworkToggleable {
 
 	private Rigidbody rb;
 	private Renderer rendComponent;
-	private SheepDisplay sheepDisplay;
-	private bool paused = false;
+	private ISheepDisplay sheepDisplay;
 
+
+	public void Awake() {
+		navAgent = GetComponent<NavMeshAgent> ();
+		rb = GetComponent<Rigidbody> ();
+	}
 
 	public override void ServerAwake() {
-		navAgent = GetComponent <NavMeshAgent>();
-		rb = GetComponent<Rigidbody>();
 		rendComponent = GetComponentInChildren<Renderer> ();
-		sheepDisplay = GetComponent<SheepDisplay> ();
+		sheepDisplay = (ISheepDisplay) GetComponent<SheepDisplay> ();
 	}
 
 	public override void ServerStart() {
-		
+		navAgent.enabled = true;
 	}
 		
 	public override void ServerUpdate () {
 		UpdateMovement();
 
-		sheepDisplay.sheepState = this.sheepState;
-	}
-
-	[Server]
-	void OnPause() {
-		this.paused = true;
-	}
-
-	[Server]
-	void OnResume() {
-		this.paused = false;
+		sheepDisplay.SetState(this.sheepState);
 	}
 
 	private void UpdateMovement() {
@@ -107,7 +99,7 @@ public class SheepController : NetworkToggleable {
 		GameObject closestFriend = null;
 		GameObject closestEnemy = null;
 
-		foreach (GameObject entity in GameObject.FindGameObjectsWithTag("entity"))
+		foreach (GameObject entity in levelManager.GetEntities())
 		{
 			if (entity == gameObject) {
 				continue;
@@ -147,7 +139,7 @@ public class SheepController : NetworkToggleable {
 	private bool IsEnemy(GameObject entity) {
 		Spooker spooker = entity.GetComponent<Spooker>();
 
-		return spooker != null && spooker.IsActive();
+		return spooker != null && spooker.active;
 	}
 
 	private void RunAway(GameObject enemy) {
@@ -164,30 +156,34 @@ public class SheepController : NetworkToggleable {
 	}
 
 	public void Launch (float forcePower, Vector3 explosionPos, float forceRadius, float depth) {
-			navAgent.updatePosition = false;
-			navAgent.updateRotation = false;
-			navAgent.enabled = false;
-			rb.constraints = RigidbodyConstraints.None;
+		navAgent.updatePosition = false;
+		navAgent.updateRotation = false;
+		navAgent.enabled = false;
+		RpcToggleNav (false);
+		rb.constraints = RigidbodyConstraints.None;
 
-			sheepState = SheepState.Ballistic;
+		sheepState = SheepState.Ballistic;
 
-			actionTimeout = Time.time + 0.1f;
+		actionTimeout = Time.time + 0.1f;
 
-			rb.AddExplosionForce(forcePower, explosionPos, forceRadius, depth);	
+		rb.AddExplosionForce(forcePower, explosionPos, forceRadius, depth);	
 	}
 	private bool ShouldRecover() {
-		return rb.velocity.sqrMagnitude < 4f;
+		return rb.velocity.sqrMagnitude < 3f;
 	}
 
 	private bool Recover() {
 		Quaternion homeRotation = Quaternion.Euler(0, 0, 0);
-
+		// Should check if airborne.
 		if (Quaternion.Angle(rb.rotation, homeRotation) < 5f) {
 			rb.rotation = homeRotation;
 			rb.constraints = RigidbodyConstraints.FreezeRotation;
 			navAgent.updatePosition = true;
 			navAgent.updateRotation = true;
+
 			navAgent.enabled = true;
+			RpcToggleNav (true);
+
 			sheepState = SheepState.Idle;
 			return true;
 		}
@@ -248,5 +244,10 @@ public class SheepController : NetworkToggleable {
 		NavMeshHit hit;
 		NavMesh.SamplePosition(randomDirection, out hit, 30f, 1);
 		return hit.position;
+	}
+
+	[ClientRpc]
+	private void RpcToggleNav(bool navEnabled) {
+		this.navAgent.enabled = navEnabled;
 	}
 }

@@ -86,7 +86,7 @@ public class DogController : MonoBehaviour {
 	}
 
 	private DogState UpdateState() {
-		if (spooker.IsActive()) {
+		if (spooker.active) {
 			return DogState.Spooking;
 		}
 		
