@@ -6,7 +6,7 @@ public class CameraController : NetworkToggleable
     public GameObject dogOne;
     public GameObject dogTwo;
 
-    const float MinCamHeight = 80f;
+    const float MinCamHeight = 40f;
     private bool wideAxisDown = false;
     private bool wideActive = false;
     private Vector3 offset;

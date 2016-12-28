@@ -68,10 +68,10 @@ public class LevelManager : NetworkToggleable, CountListener, DeathListener, IGa
 		if (respawnable) {
 			spawner.RespawnDog(gameObject.GetComponent<PlayerControl>());
 		} else {
-			GameObject.Destroy(gameObject);
+			DestroyImmediate (gameObject);
 			deadSheep++;
 
-			entities = null;
+			GetEntities (true);
 			UpdateHud ();
 		}
 	}
@@ -110,8 +110,10 @@ public class LevelManager : NetworkToggleable, CountListener, DeathListener, IGa
 		uiInterface.ShowEndScreen(totalSheep, sheepInGoal, deadSheep, Time.time - startTime);
 	}
 
-	public List<GameObject> GetEntities() {
-		if (entities == null) {
+	public List<GameObject> GetEntities(bool refresh = false) {
+		if (entities == null || refresh) {
+			Debug.Log ("Rebuilding Entities");
+
 			entities = new List<GameObject> ();
 
 			entities.AddRange (GameObject.FindGameObjectsWithTag ("entity"));

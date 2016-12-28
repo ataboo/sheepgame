@@ -19,10 +19,11 @@ public class PlayerControl : NetworkToggleable {
 	public string horizAxis;
 	public string activateAxis;
 	public string runAxis;
+	public Vector3 velocity;
 	public DogState dogState = DogState.Normal;
 
-	float walkSpeed = 8.0f;
-	float runSpeed = 14f;
+	float walkSpeed = 4.0f;
+	float runSpeed = 10f;
 	private float speed;
 	private bool running = false;
 
@@ -59,26 +60,26 @@ public class PlayerControl : NetworkToggleable {
 	}
 
 	void Move() {
+		if (spooker.active) {
+			return;
+		}
+
 		Vector3 oldPos = transform.position;
 
-		Vector3 movement = new Vector3(Input.GetAxis(horizAxis), 0, Input.GetAxis(vertAxis)).normalized * speed * Time.deltaTime;
+		this.velocity = new Vector3 (Input.GetAxis (horizAxis), 0, Input.GetAxis (vertAxis)).normalized * speed;
+
+		Vector3 movement = velocity * Time.deltaTime;
 
 		transform.position += movement;
 
 		if (movement.sqrMagnitude > 0) {
 			transform.rotation = Quaternion.RotateTowards (rb.rotation, Quaternion.LookRotation (movement.normalized, Vector3.up), 10f);
 		}
-
-
 	}
 
 	private DogState UpdateState() {
 		if (spooker.active) {
 			return DogState.Spooking;
-		}
-
-		if (running) {
-			return DogState.Running;
 		}
 
 		return DogState.Normal;
@@ -101,9 +102,9 @@ public class PlayerControl : NetworkToggleable {
 		}
 
 		if (_runningOnServer) {
-			spooker.Activate (1f);
+			spooker.Activate (1.25f);
 		} else {
-			spooker.CmdActivate (1f);
+			spooker.CmdActivate (1.25f);
 		}
 	}
 		
