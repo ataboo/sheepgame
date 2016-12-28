@@ -39,6 +39,8 @@ public class PlayerControl : NetworkToggleable {
 		this.rb = GetComponent<Rigidbody> ();
 		this.spooker = GetComponent<Spooker> ();
 		this.rendComp = GetComponentInChildren<Renderer> ();
+
+		rb.centerOfMass = new Vector3 (10, 10, 10);
 	}
 
 	public override void BothStart () {
@@ -57,9 +59,17 @@ public class PlayerControl : NetworkToggleable {
 	}
 
 	void Move() {
+		Vector3 oldPos = transform.position;
+
 		Vector3 movement = new Vector3(Input.GetAxis(horizAxis), 0, Input.GetAxis(vertAxis)).normalized * speed * Time.deltaTime;
 
 		transform.position += movement;
+
+		if (movement.sqrMagnitude > 0) {
+			transform.rotation = Quaternion.RotateTowards (rb.rotation, Quaternion.LookRotation (movement.normalized, Vector3.up), 10f);
+		}
+
+
 	}
 
 	private DogState UpdateState() {
