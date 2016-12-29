@@ -3,15 +3,14 @@
 public interface CountListener {
 	void OnCountChange(int newCount);
 }
-public class SheepCounter : NetworkToggleable {
+
+public class SheepCounter : MonoBehaviour {
 	private CountListener countListener;
 	private int sheepCount = 0;
 
-	override public void ServerStart() {
-		SendCount ();
-	}
-
 	public void OnTriggerEnter(Collider collider) {
+		Debug.Log ("Trigger Enter.");
+
 		SheepController sc = collider.gameObject.GetComponent<SheepController>();
 
 		if (sc != null) {
@@ -21,6 +20,8 @@ public class SheepCounter : NetworkToggleable {
 	}
 
 	public void OnTriggerExit(Collider collider) {
+		Debug.Log ("Trigger Exit.");
+
 		SheepController sc = collider.gameObject.GetComponent<SheepController>();
 
 		if (sc != null) {
@@ -29,17 +30,16 @@ public class SheepCounter : NetworkToggleable {
 		}
 	}
 
-	public void SetListener(CountListener listener) {
-		this.countListener = listener;
+	public void SetListener(CountListener countListener) {
+		this.countListener = countListener;
 
-		listener.OnCountChange (sheepCount);
+		SendCount ();
 	}
-
+		
 	private void SendCount() {
-		if (countListener == null) {
-			Debug.LogError("SheepCounter has no listener.");
-		} else {
-			countListener.OnCountChange(sheepCount);
-		}
+		Debug.Log ("Sheep Count Change: " + sheepCount);
+
+		countListener.OnCountChange (sheepCount);
 	}
 }
+	

@@ -13,7 +13,7 @@ public enum SheepState
 	Recovering
 }
 
-public class SheepController : MonoBehaviour, INetworkCharacter {
+public class SheepController : MonoBehaviour, INetworkCharacter, ISheepDisplay {
 
 	NavMeshAgent navAgent;
 
@@ -36,7 +36,6 @@ public class SheepController : MonoBehaviour, INetworkCharacter {
 	private float actionTimeout = 0f;
 
 	private Rigidbody rb;
-	private ISheepDisplay sheepDisplay;
 
 	public bool isMasterClient = false;
 
@@ -44,11 +43,11 @@ public class SheepController : MonoBehaviour, INetworkCharacter {
 	private Quaternion correctRotation;
 
 
-	public void OnEnable() {
-
-		sheepDisplay = (ISheepDisplay) GetComponent<SheepDisplay> ();
+	public void Start() {
 		rb = GetComponent<Rigidbody> ();
 		navAgent = GetComponent<NavMeshAgent> ();
+
+		isMasterClient = GetComponent<PhotonView>().isMine;
 
 		navAgent.enabled = isMasterClient;
 	}
@@ -73,7 +72,7 @@ public class SheepController : MonoBehaviour, INetworkCharacter {
 
 	private void LerpRemoteTransform()
 	{
-		if (transform.position == null) {
+		if (correctPosition == null) {
 			return;
 		}
 
@@ -278,5 +277,9 @@ public class SheepController : MonoBehaviour, INetworkCharacter {
 
 	public int GetSyncCount() {
 		return 3;
+	}
+
+	public SheepState GetSheepState() {
+		return this.sheepState;
 	}
 }

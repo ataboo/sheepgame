@@ -48,10 +48,12 @@ public class TestMatchmaker : Photon.PunBehaviour
 
     public override void OnJoinedRoom()
     {
-        
+		entitySpawner.SpawnDog ();
+		entitySpawner.SpawnDog ();
 
-		entitySpawner.SpawnDog ();
-		entitySpawner.SpawnDog ();
+		if (PhotonNetwork.isMasterClient) {
+			entitySpawner.InitialSheepSpawn ();
+		}
     }
 
 //	public override void OnPlayerJoined()

@@ -15,11 +15,9 @@ public class Spooker : MonoBehaviour {
 
 	public void Start() {
 		active = permaSpooky;
-		Debug.Log ("Ran  Spooker Start");
 	}
 
 	public void Awake() {
-		Debug.Log ("Ran Spooker Awake");
 	}
 
 	public void Update() {

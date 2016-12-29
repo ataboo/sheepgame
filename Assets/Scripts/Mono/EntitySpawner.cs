@@ -16,10 +16,7 @@ public class EntitySpawner : MonoBehaviour {
 	private UIInterface uiInterface;
 	private CameraController camController;
 
-	public static EntitySpawner instance;
-
 	public void Awake() {
-		EntitySpawner.instance = this;
 	}
 
 	public void Start() {
@@ -59,8 +56,7 @@ public class EntitySpawner : MonoBehaviour {
 	private void SpawnSheep(Transform basePosition) {
 		Vector3 spawnPos = MakeSpawnPoint(basePosition);
 
-		GameObject sheep = (GameObject) Instantiate(sheepPrefab, spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0));
-		NetworkServer.Spawn(sheep);
+		GameObject sheep = (GameObject) PhotonNetwork.InstantiateSceneObject("NPCNetSheep", spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0), 0, null);
 	}
 
 	public bool ShouldBeActive(GameObject entity) {

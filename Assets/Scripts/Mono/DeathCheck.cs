@@ -5,16 +5,16 @@ public interface DeathListener {
 	void IsKill(GameObject gameObject, bool respawnable);
 }
 
-public class DeathCheck : NetworkToggleable {
+public class DeathCheck : MonoBehaviour {
 	public bool respawnable = false;
 	public float deathHeight = -20f;
 	private DeathListener deathListener;
 
-	override public void ServerAwake() {
-		this.deathListener = (DeathListener) GameObject.FindGameObjectWithTag ("LevelManager").GetComponent<LevelManager> ();
+	public void Awake() {
+		this.deathListener = (DeathListener) GameObject.FindGameObjectWithTag ("LevelManager").GetComponent<GameNetworking> ();
 	}
 
-	override public void ServerUpdate () {
+	public void Update () {
 
 		if (transform.position.y < deathHeight) {
 			isKill();

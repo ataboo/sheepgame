@@ -7,7 +7,7 @@ public interface UIListener {
 	void ShowEndScreen (int total, int inGoal, int dead, float runTime);
 }
 
-public class UIInterface: UIListener {
+public class UIInterface: MonoBehaviour, UIListener {
 	public class GameSummary {
 		const float WinRatio = 0.75f;
 		public int sheepInGoal;
@@ -65,16 +65,10 @@ public class UIInterface: UIListener {
 	public Text endSubtitle;
 	public Text endDetail;
 
-	//============== UIListener =====================
-
 	public void UpdateHud(int total, int inGoal, int dead) {
 		int wildCount = total - inGoal - dead;
 
 		hudText.text = string.Format("Sheep Count\nInside Goal: {0}\nIn The Wild: {1}\nDeparted: {2}", inGoal, wildCount, dead);
-	}
-
-	private void setHud(int total, int inGoal, int dead) {
-		
 	}
 		
 	public void ShowEndScreen(int total, int inGoal, int dead, float runTime) {

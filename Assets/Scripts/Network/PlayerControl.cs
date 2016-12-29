@@ -22,18 +22,13 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 	private float speed;
 	private bool running = false;
 
-	private float gravity = 10f;
-
 	public bool isLocalControl = false;
 
 	public bool isActive = false;
 	private Spooker spooker;
 	private CharacterController controller;
 
-	private CollisionFlags lastCollisionFlag;
-
 	public void Awake() {
-		Debug.Log ("Ran Player Awake");
 		spooker = GetComponent<Spooker> ();
 		speed = walkSpeed;
 
@@ -42,7 +37,6 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 	}
 
 	public void Start() {
-		//this.isActive = EntitySpawner.instance.ShouldBeActive (gameObject);
 		if (isLocalControl) {
 			DogControl dogControl = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController> ().RegisterDog (this);
 			this.SetControls (dogControl);
@@ -91,8 +85,6 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 
 	[PunRPC]
 	public void Teleport(Vector3 position) {
-		Debug.Log ("Called Teleport");
-
 		this.isActive = true;
 		
 		this.transform.position = position;
@@ -190,8 +182,8 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
     }
 
 	private bool IsGrounded() {
-		return (lastCollisionFlag & CollisionFlags.CollidedBelow) != 0;
-	
+		//return (lastCollisionFlag & CollisionFlags.CollidedBelow) != 0;
+		return true;
 	}
 		
 
