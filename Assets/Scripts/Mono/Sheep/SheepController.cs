@@ -13,7 +13,7 @@ public enum SheepState
 	Recovering
 }
 
-public class SheepController : NetworkToggleable {
+public class SheepController : MonoBehaviour, INetworkCharacter {
 
 	NavMeshAgent navAgent;
 
@@ -36,36 +36,51 @@ public class SheepController : NetworkToggleable {
 	private float actionTimeout = 0f;
 
 	private Rigidbody rb;
-	private Renderer rendComponent;
 	private ISheepDisplay sheepDisplay;
 
+	public bool isMasterClient = false;
 
-	public void Awake() {
-		navAgent = GetComponent<NavMeshAgent> ();
-		rb = GetComponent<Rigidbody> ();
-	}
+	private Vector3 correctPosition;
+	private Quaternion correctRotation;
 
-	public override void ServerAwake() {
-		rendComponent = GetComponentInChildren<Renderer> ();
+
+	public void OnEnable() {
+
 		sheepDisplay = (ISheepDisplay) GetComponent<SheepDisplay> ();
-	}
+		rb = GetComponent<Rigidbody> ();
+		navAgent = GetComponent<NavMeshAgent> ();
 
-	public override void ServerStart() {
-		navAgent.enabled = true;
+		navAgent.enabled = isMasterClient;
 	}
 		
-	public override void ServerUpdate () {
-		UpdateMovement();
-
-		sheepDisplay.SetState(this.sheepState);
+	public void Update () {
+		if (isMasterClient) {
+			UpdateMovement ();
+		} else {
+			LerpRemoteTransform ();
+		}
 	}
 
 	private void UpdateMovement() {
-		if (sheepState != SheepState.Dead) {
-			Navigate();
+		if (isMasterClient) {
+			if (sheepState != SheepState.Dead) {
+				Navigate ();
+			}
+		} else {
+			LerpRemoteTransform ();
+		}
+	}
+
+	private void LerpRemoteTransform()
+	{
+		if (transform.position == null) {
+			return;
 		}
 
+		transform.position = Vector3.Lerp(transform.position, correctPosition, Time.deltaTime * 5);
+		transform.rotation = Quaternion.Lerp(transform.rotation, correctRotation, Time.deltaTime * 5);
 	}
+
 	private void Navigate() {
 		if (sheepState == SheepState.Ballistic) {
 			if (ShouldRecover()) {
@@ -99,7 +114,9 @@ public class SheepController : NetworkToggleable {
 		GameObject closestFriend = null;
 		GameObject closestEnemy = null;
 
-		foreach (GameObject entity in levelManager.GetEntities())
+
+		//TODO: detect player
+		foreach (GameObject entity in GameObject.FindGameObjectsWithTag("entity"))
 		{
 			if (entity == gameObject) {
 				continue;
@@ -159,7 +176,6 @@ public class SheepController : NetworkToggleable {
 		navAgent.updatePosition = false;
 		navAgent.updateRotation = false;
 		navAgent.enabled = false;
-		RpcToggleNav (false);
 		rb.constraints = RigidbodyConstraints.None;
 
 		sheepState = SheepState.Ballistic;
@@ -174,7 +190,7 @@ public class SheepController : NetworkToggleable {
 
 	private bool Recover() {
 		Quaternion homeRotation = Quaternion.Euler(0, 0, 0);
-		// Should check if airborne.
+		// TODO: Should check if airborne.
 		if (Quaternion.Angle(rb.rotation, homeRotation) < 5f) {
 			rb.rotation = homeRotation;
 			rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -182,14 +198,12 @@ public class SheepController : NetworkToggleable {
 			navAgent.updateRotation = true;
 
 			navAgent.enabled = true;
-			RpcToggleNav (true);
 
 			sheepState = SheepState.Idle;
 			return true;
 		}
 
 		rb.rotation = Quaternion.RotateTowards(rb.rotation, homeRotation, 100f * Time.deltaTime);
-		//rb.velocity = new Vector3(0, 0, 0);
 			
 		return false;
 	}
@@ -246,8 +260,23 @@ public class SheepController : NetworkToggleable {
 		return hit.position;
 	}
 
-	[ClientRpc]
-	private void RpcToggleNav(bool navEnabled) {
-		this.navAgent.enabled = navEnabled;
+	public object[] GetSyncVars() {
+		object[] syncVars = {
+			transform.position, 
+			transform.rotation, 
+			(int)sheepState
+		};
+
+		return syncVars;
+	}
+
+	public void PutSyncVars(object[] serialized) {
+		correctPosition = (Vector3) serialized [0];
+		correctRotation = (Quaternion) serialized [1];
+		sheepState = (SheepState)serialized [2];
+	}
+
+	public int GetSyncCount() {
+		return 3;
 	}
 }

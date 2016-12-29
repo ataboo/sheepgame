@@ -1,14 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public enum DogState {
-	Normal,
-	Spooking,
-	Running,
-	Dead
-}
-
-public class PlayerControl : NetworkToggleable {
+public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 	public enum DogControl {
 		DogOne,
 		DogTwo,
@@ -20,148 +13,186 @@ public class PlayerControl : NetworkToggleable {
 	public string activateAxis;
 	public string runAxis;
 	public Vector3 velocity;
-	public DogState dogState = DogState.Normal;
+
+	public Vector3 correctPosition;
+	public Quaternion correctRotation;
 
 	float walkSpeed = 4.0f;
 	float runSpeed = 10f;
 	private float speed;
 	private bool running = false;
 
-	[SyncVar(hook="OnAwakeChange")]
-	public bool isAwake = false;
+	private float gravity = 10f;
 
-	private Rigidbody rb;
+	public bool isLocalControl = false;
+
+	public bool isActive = false;
 	private Spooker spooker;
-	private Renderer rendComp;
+	private CharacterController controller;
 
-	public override void BothAwake () 
-	{
+	private CollisionFlags lastCollisionFlag;
+
+	public void Awake() {
+		Debug.Log ("Ran Player Awake");
+		spooker = GetComponent<Spooker> ();
 		speed = walkSpeed;
-		this.rb = GetComponent<Rigidbody> ();
-		this.spooker = GetComponent<Spooker> ();
-		this.rendComp = GetComponentInChildren<Renderer> ();
 
-		rb.centerOfMass = new Vector3 (10, 10, 10);
+		this.isLocalControl = GetComponent<PhotonView> ().isMine;
+		this.spooker.isLocalControl = isLocalControl;
 	}
 
-	public override void BothStart () {
+	public void Start() {
+		//this.isActive = EntitySpawner.instance.ShouldBeActive (gameObject);
+		if (isLocalControl) {
+			DogControl dogControl = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController> ().RegisterDog (this);
+			this.SetControls (dogControl);
+		}
 	}
 
-	public override void BothUpdate () {
-		if (!isLocalPlayer || vertAxis == "") {
+	public void Update () {
+		if (!isActive) {
 			return;
 		}
 
-		Move();
 
-		ProcessInput();
-
-		this.dogState = UpdateState ();
-	}
-
-	void Move() {
-		if (spooker.active) {
-			return;
-		}
-
-		Vector3 oldPos = transform.position;
-
-		this.velocity = new Vector3 (Input.GetAxis (horizAxis), 0, Input.GetAxis (vertAxis)).normalized * speed;
-
-		Vector3 movement = velocity * Time.deltaTime;
-
-		transform.position += movement;
-
-		if (movement.sqrMagnitude > 0) {
-			transform.rotation = Quaternion.RotateTowards (rb.rotation, Quaternion.LookRotation (movement.normalized, Vector3.up), 10f);
-		}
-	}
-
-	private DogState UpdateState() {
-		if (spooker.active) {
-			return DogState.Spooking;
-		}
-
-		return DogState.Normal;
-	}
-
-	void ProcessInput() {
-		if (Input.GetButtonDown(runAxis)) {
-			running = !running;
-			speed = running ? runSpeed : walkSpeed;
-		}
-
-		if (Input.GetButton (activateAxis)) {
-			ActivateSpook ();
-		}
-	}
-
-	private void ActivateSpook() {
-		if (spooker.active) {
-			return;
-		}
-
-		if (_runningOnServer) {
-			spooker.Activate (1.25f);
+		if (isLocalControl) {
+			Move ();
+			ProcessInput();
 		} else {
-			spooker.CmdActivate (1.25f);
+			LerpRemoteTransform();
 		}
 	}
-		
+
+	public void InitCamera() {
+		DogControl dogControl = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController>().RegisterDog (this);
+
+		SetControls (dogControl);
+	}
+
 	public void SetControls(DogControl dogControl) {
 		switch(dogControl) {
-			case DogControl.DogOne:
-				vertAxis = "Vertical";
-				horizAxis = "Horizontal";
-				activateAxis = "OneActivate";
-				runAxis = "OneRun";
+		case DogControl.DogOne:
+			vertAxis = "Vertical";
+			horizAxis = "Horizontal";
+			activateAxis = "OneActivate";
+			runAxis = "OneRun";
 			break;
-			case DogControl.DogTwo:
-				vertAxis = "TwoVertical";
-				horizAxis = "TwoHorizontal";
-				activateAxis = "TwoActivate";
-				runAxis = "TwoRun";
+		case DogControl.DogTwo:
+			vertAxis = "TwoVertical";
+			horizAxis = "TwoHorizontal";
+			activateAxis = "TwoActivate";
+			runAxis = "TwoRun";
 			break;
-			default:
+		default:
 			Debug.LogError("DogController shouldn't be handling Non Player DogControl.");
 			break;
 		}
 	}
 
+	[PunRPC]
 	public void Teleport(Vector3 position) {
 		Debug.Log ("Called Teleport");
 
+		this.isActive = true;
+		
 		this.transform.position = position;
-		GetComponent<Rigidbody> ().velocity = Vector3.zero;
+	}
 
-		//this.isAwake = true;
-		if (_runningOnServer) {
-			this.isAwake = true;
-			levelManager.RebuildEntityList ();
+	#region INetworkCharacter
+	public object[] GetSyncVars() {
+		if (spooker == null) {
+			Debug.Log ("Confirmed... spooker is null.");
+			spooker = GetComponent<Spooker> ();
+		}
+
+
+		object[] syncVars = new object[] {
+			transform.position, 
+			transform.rotation, 
+			velocity,
+			spooker.active
+		};
+		
+		return syncVars;
+	}
+	
+	public void PutSyncVars(object[] serialized) {
+		correctPosition = (Vector3) serialized [0];
+		correctRotation = (Quaternion) serialized [1];
+		velocity = (Vector3) serialized [2];
+		spooker.active = (bool)serialized [3];
+	}
+	
+	public int GetSyncCount() {
+		return 4;
+	}
+	#endregion
+	
+	#region IDogDisplay
+	public float GetVelocity() {
+		return velocity.magnitude;
+	}
+	
+	public bool IsBarking() {
+		if (spooker == null) {
+			return false;
+		}
+
+		return spooker.active;
+	}
+	#endregion
+
+	private void Move() {
+		if(spooker.active) {
+			return;
+		}
+		
+		Vector3 oldPos = transform.position;
+		
+		Vector3 movement = new Vector3 (Input.GetAxis (horizAxis), 0, Input.GetAxis (vertAxis)).normalized * speed;
+		
+		//if (!IsGrounded()) {
+			//movement += new Vector3 (0, -gravity, 0);
+		//}
+		
+		movement *= Time.deltaTime;
+		
+		transform.position += movement;
+
+		this.velocity = (transform.position - oldPos) / Time.deltaTime;
+
+		if (velocity.sqrMagnitude < 0.5) {
+			velocity = Vector3.zero;
 		} else {
-			CmdSetActive (true);
-			SyncAwake ();
+			transform.rotation = Quaternion.RotateTowards (transform.rotation, Quaternion.LookRotation (velocity.normalized, Vector3.up), 10f);
 		}
 	}
 
-	[Command]
-	private void CmdSetActive(bool active) {
-		this.isAwake = active;
+	private void ProcessInput() {
+		if (Input.GetButtonDown(runAxis)) {
+			running = !running;
+			speed = running ? runSpeed : walkSpeed;
+		}
 
-		levelManager.RebuildEntityList ();
-	}
-
-	private void SyncAwake() {
-		foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
-			PlayerControl pc = player.GetComponent<PlayerControl> ();
-			pc.OnAwakeChange (pc.isAwake);
+		if (Input.GetButton (activateAxis) && !spooker.active) {
+			ActivateSpook ();
 		}
 	}
 
-	public void OnAwakeChange(bool awake) {
-
-		this.isAwake = awake;
-		//GetComponent<MeshRenderer> ().enabled = true;
-		GetComponent<Rigidbody> ().isKinematic = !awake;
+	private void ActivateSpook() {
+		spooker.Activate (1.25f);
 	}
+
+	private void LerpRemoteTransform()
+    {
+		transform.position = Vector3.Lerp(transform.position, correctPosition, Time.deltaTime * 5);
+		transform.rotation = Quaternion.Lerp(transform.rotation, correctRotation, Time.deltaTime * 5);
+    }
+
+	private bool IsGrounded() {
+		return (lastCollisionFlag & CollisionFlags.CollidedBelow) != 0;
+	
+	}
+		
+
 }

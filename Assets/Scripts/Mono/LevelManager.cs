@@ -66,7 +66,7 @@ public class LevelManager : NetworkToggleable, CountListener, DeathListener, IGa
 	[Server]
 	public void IsKill(GameObject gameObject, bool respawnable) {
 		if (respawnable) {
-			spawner.RespawnDog(gameObject.GetComponent<PlayerControl>());
+			spawner.RespawnDog(gameObject);
 		} else {
 			DestroyImmediate (gameObject);
 			deadSheep++;
@@ -85,10 +85,7 @@ public class LevelManager : NetworkToggleable, CountListener, DeathListener, IGa
 		deadSheep = 0;
 		startTime = Time.time;
 	}
-
-	public void RequestSpawn(PlayerControl playerControl) {
-		spawner.RespawnDog (playerControl);
-	}
+		
 
 	[Server]
 	private void UpdateHud() {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
-public class EntitySpawner : NetworkToggleable {
+public class EntitySpawner : MonoBehaviour {
 
 	public int sheepCount = 12;
 	public Vector2 spawnRadRange = new Vector2(2f, 10f);
@@ -16,24 +16,23 @@ public class EntitySpawner : NetworkToggleable {
 	private UIInterface uiInterface;
 	private CameraController camController;
 
-	public override void BothAwake() {
+	public static EntitySpawner instance;
+
+	public void Awake() {
+		EntitySpawner.instance = this;
+	}
+
+	public void Start() {
 		GetSpawnPoints();
 		GameObject camObj = GameObject.FindGameObjectWithTag ("Camera");
 		camController = camObj.GetComponent<CameraController>();
 	}
 
-	public override void ServerStart() {
-		InitialSpawn ();
+	public void ServerStart() {
+		InitialSheepSpawn ();
 	}
 		
-	public GameObject SpawnNetDog(string name) {
-		GameObject dog = (GameObject) GameObject.Instantiate(netDogPrefab, MakeSpawnPoint(dogSpawnOne), Quaternion.Euler(0, 0, 0));
-		dog.name = name;
-
-		return dog;
-	}
-		
-	public void RespawnDog(PlayerControl playerControl) {
+	public void RespawnDog(GameObject dog) {
 		if (dogSpawnOne == null) {
 			GetSpawnPoints ();
 
@@ -46,7 +45,15 @@ public class EntitySpawner : NetworkToggleable {
   
 		Vector3 dogSpawn = MakeSpawnPoint (dogSpawnOne);
 
-		playerControl.Teleport (dogSpawn);
+		dog.GetComponent<PhotonView> ().RPC ("Teleport", PhotonTargets.AllBuffered, dogSpawn);
+	}
+
+	public void SpawnDog() {
+		GameObject dog = PhotonNetwork.Instantiate("PCCollie", Vector3.zero, Quaternion.identity, 0);
+
+		PlayerControl playerControl = dog.GetComponent<PlayerControl>();
+
+		RespawnDog (dog);
 	}
 	
 	private void SpawnSheep(Transform basePosition) {
@@ -56,11 +63,15 @@ public class EntitySpawner : NetworkToggleable {
 		NetworkServer.Spawn(sheep);
 	}
 
+	public bool ShouldBeActive(GameObject entity) {
+		return true;
+	}
+
 	public int GetSheepCount() {
 		return sheepCount;
 	}
 
-	public void InitialSpawn() {		
+	public void InitialSheepSpawn() {		
 		for (int i=0; i < sheepCount; i++) {
 			int spawnPointIndex = Random.Range(0, sheepSpawns.Count);
 

@@ -2,46 +2,43 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public class Spooker : NetworkToggleable {
+public class Spooker : MonoBehaviour {
 	public bool permaSpooky = false;
 	public float forceRadius = 4f;
 	public float forcePower = 10000f;
 
-	[SyncVar(hook="OnSpookChange")]
 	public bool active = false;
+	public bool isLocalControl = false;
 
 	private float spookspiry = 0;
 	private Renderer rend;
 
-	override public void ServerStart() {
+	public void Start() {
 		active = permaSpooky;
+		Debug.Log ("Ran  Spooker Start");
 	}
 
-	override public void ServerUpdate() {
-		if (permaSpooky || !active) {
+	public void Awake() {
+		Debug.Log ("Ran Spooker Awake");
+	}
+
+	public void Update() {
+		if (!isLocalControl || permaSpooky || !active) {
 			return;
 		}
 
 		checkForExpiry();
 	}
-
-	[Server]
+		
 	public void Activate(float lifeSecs = 0) {
-		if (!active) {
-			Explode();
-		}
-
-
+//		if (!active) {
+//			Explode();
+//		}
+			
 		this.active = true;
 		spookspiry = Time.time + lifeSecs;
 	}
-
-	[Command]
-	public void CmdActivate(float lifeSecs) {
-		Activate (lifeSecs);
-	}
-
-	[Server]
+		
 	private void Explode() {
  		Vector3 explosionPos = transform.position;
         Collider[] colliders = Physics.OverlapSphere(explosionPos, forceRadius);
@@ -57,8 +54,7 @@ public class Spooker : NetworkToggleable {
 			}
         }
 	}
-
-	[Server]
+		
 	private void checkForExpiry() {
 		if (spookspiry <= Time.time) {
 			this.active = false;

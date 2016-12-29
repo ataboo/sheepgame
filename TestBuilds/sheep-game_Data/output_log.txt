@@ -8,6 +8,8 @@ Direct3D:
 Begin MonoManager ReloadAssembly
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Assembly-CSharp.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.UI.dll (this message is harmless)
@@ -16,34 +18,40 @@ Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Dat
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.149 seconds
+Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Photon3Unity3D.dll (this message is harmless)
+Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Photon3Unity3D.dll into Unity Child Domain
+- Completed reload, in  0.170 seconds
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.876595 ms
+UnloadTime: 0.846549 ms
+Ran Spooker Awake
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran Player Awake
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran  Spooker Start
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 2aac -> priority: 1 
-  Thread -> id: ee8 -> priority: 1 
-Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 5.439851 ms
-
-Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 814.
-Total: 0.577590 ms (FindLiveObjects: 0.075553 ms CreateObjectMapping: 0.020128 ms MarkObjects: 0.462947 ms  DeleteObjects: 0.018377 ms)
-
-DontDestroyOnLoad only work for root GameObjects or components on root GameObjects.
+  Thread -> id: 66c -> priority: 1 
+  Thread -> id: 978 -> priority: 1 
+OnJoinedLobby
  
-(Filename:  Line: 386)
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-DontDestroyOnLoad only work for root GameObjects or components on root GameObjects.
+Ran Player Awake
  
-(Filename:  Line: 386)
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 1.375423 ms
-SheepCounter has no listener.
+Ran Spooker Awake
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
@@ -51,36 +59,55 @@ Called Teleport
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-Exception in OnStartClient:Object reference not set to an instance of an object   at PlayerControl.Teleport (Vector3 position) [0x00000] in <filename unknown>:0 
-  at EntitySpawner.RespawnDog (.PlayerControl playerControl) [0x00000] in <filename unknown>:0 
-  at CameraController.FindLocalPlayers () [0x00000] in <filename unknown>:0 
-  at CameraController.BothStart () [0x00000] in <filename unknown>:0 
-  at NetworkToggleable.OnStartClient () [0x00000] in <filename unknown>:0 
-  at UnityEngine.Networking.NetworkIdentity.OnStartClient () [0x00000] in <filename unknown>:0 
+Ran Player Awake
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-
-Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 1194.
-Total: 0.925894 ms (FindLiveObjects: 0.071177 ms CreateObjectMapping: 0.021878 ms MarkObjects: 0.821170 ms  DeleteObjects: 0.011376 ms)
+Ran Spooker Awake
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
 Called Teleport
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-Ran Rebuild local.
+Ran Player Awake
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-Rebuilding Entities
+Ran Spooker Awake
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-Ran Rebuild local.
+Called Teleport
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-Rebuilding Entities
+Ran Player Awake
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran Spooker Awake
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Called Teleport
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran  Spooker Start
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran  Spooker Start
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran  Spooker Start
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Ran  Spooker Start
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 

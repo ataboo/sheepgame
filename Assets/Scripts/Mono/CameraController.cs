@@ -1,42 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class CameraController : NetworkToggleable
+public class CameraController : MonoBehaviour
 {
     public GameObject dogOne;
     public GameObject dogTwo;
 
-    const float MinCamHeight = 40f;
+    const float MinCamHeight = 30f;
     private bool wideAxisDown = false;
     private bool wideActive = false;
     private Vector3 offset;
 
     private Camera cam;
-	private EntitySpawner spawner;
 
-    public override void BothAwake()
+    public void OnEnable()
     {
 		cam = GetComponent<Camera>();
-
-		GameObject levelManager = GameObject.FindGameObjectWithTag ("LevelManager");
-
-		spawner = levelManager.GetComponent<EntitySpawner> ();
     }
 
-	public override void BothStart() 
-	{
-		if (dogOne == null) {
-			FindLocalPlayers ();
-		}
-	}
-
-	public override void BothUpdate()
+	public void Update()
     {
         CatchWideToggle();
-
-		if (dogOne == null) {
-			FindLocalPlayers ();
-		}
     }
 
 
@@ -44,28 +28,6 @@ public class CameraController : NetworkToggleable
     {
         MoveCam();
     }
-
-	private void FindLocalPlayers() {
-		bool dogOneSet = false;
-		foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
-			if (!player.GetComponent<NetworkIdentity> ().isLocalPlayer) {
-				continue;
-			}
-				
-			PlayerControl control = player.GetComponent<PlayerControl> ();
-			spawner.RespawnDog (control);
-
-			if (!dogOneSet) {
-				dogOne = player;
-				control.SetControls (PlayerControl.DogControl.DogOne);
-				dogOneSet = true;
-			} else {
-				dogTwo = player;
-				control.SetControls (PlayerControl.DogControl.DogTwo);
-				return;
-			}
-		}
-	}
 
     private void MoveCam()
     {
@@ -81,8 +43,8 @@ public class CameraController : NetworkToggleable
         {
             Vector3 deltaDog = dogOne.transform.position - dogTwo.transform.position;
             centerPos = deltaDog / 2f + dogTwo.transform.position;
-            vertMinHeight = Mathf.Max(vertMinHeight, Mathf.Abs(deltaDog.z * 2.1f));
-            vertMinHeight = Mathf.Max(vertMinHeight, Mathf.Abs(deltaDog.x * 2.1f / cam.aspect));
+            vertMinHeight = Mathf.Max(vertMinHeight, Mathf.Abs(deltaDog.z * 3f));
+            vertMinHeight = Mathf.Max(vertMinHeight, Mathf.Abs(deltaDog.x * 3f / cam.aspect));
         }
 
         offset.y = vertMinHeight;
@@ -114,4 +76,16 @@ public class CameraController : NetworkToggleable
             }
         }
     }
+
+	public PlayerControl.DogControl RegisterDog(PlayerControl playerControl) {
+		if (dogOne == null) {
+			dogOne = playerControl.gameObject;
+			return PlayerControl.DogControl.DogOne;
+		} else if (dogTwo == null) {
+			dogTwo = playerControl.gameObject;
+			return PlayerControl.DogControl.DogTwo;
+		}
+
+		throw new UnityException ("Failed to RegisterDog with CameraController as both slots are full.");
+	}
 }

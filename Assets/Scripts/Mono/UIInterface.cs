@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.Networking;
-using Prototype.NetworkLobby;
 
 public interface UIListener {
 	void UpdateHud(int total, int inGoal, int dead);
 	void ShowEndScreen (int total, int inGoal, int dead, float runTime);
 }
 
-public class UIInterface : NetworkToggleable, UIListener {
+public class UIInterface: UIListener {
 	public class GameSummary {
 		const float WinRatio = 0.75f;
 		public int sheepInGoal;
@@ -89,12 +87,6 @@ public class UIInterface : NetworkToggleable, UIListener {
 		endDetail.text = summary.Details();
 
 		endPanel.SetActive(true);
-
-		GameObject topPanelObj = GameObject.FindGameObjectWithTag ("TopPanel");
-
-		if (topPanelObj != null) {
-			topPanelObj.GetComponent<LobbyTopPanel> ().ToggleVisibility(true);
-		}
 	}
 
 	public void HideEndScreen() {
