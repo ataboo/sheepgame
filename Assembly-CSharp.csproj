@@ -127,10 +127,11 @@
      <Compile Include="Assets\Scripts\Mono\CameraController.cs" />
      <Compile Include="Assets\Scripts\Mono\DeathCheck.cs" />
      <Compile Include="Assets\Scripts\Mono\Dog\DogDisplay.cs" />
+     <Compile Include="Assets\Scripts\Mono\Dog\PlayerControl.cs" />
      <Compile Include="Assets\Scripts\Mono\EntitySpawner.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic.cs" />
-     <Compile Include="Assets\Scripts\Mono\MenuController.cs" />
-     <Compile Include="Assets\Scripts\Mono\PlayerRow.cs" />
+     <Compile Include="Assets\Scripts\Mono\Lobby\MenuController.cs" />
+     <Compile Include="Assets\Scripts\Mono\Lobby\PlayerRow.cs" />
      <Compile Include="Assets\Scripts\Mono\Sheep\SheepController.cs" />
      <Compile Include="Assets\Scripts\Mono\Sheep\SheepDisplay.cs" />
      <Compile Include="Assets\Scripts\Mono\SheepCounter.cs" />
@@ -141,7 +142,6 @@
      <Compile Include="Assets\Scripts\Network\Old\DogController.cs" />
      <Compile Include="Assets\Scripts\Network\Old\PlayerMover.cs" />
      <Compile Include="Assets\Scripts\Network\Old\SheepNetworkManager.cs" />
-     <Compile Include="Assets\Scripts\Network\PlayerControl.cs" />
      <Compile Include="Assets\Scripts\Network\TestMatchmaker.cs" />
      <Compile Include="Assets\Scripts\Utility\AtaUtility.cs" />
      <None Include="Assets\Photon Unity Networking\link.xml" />
