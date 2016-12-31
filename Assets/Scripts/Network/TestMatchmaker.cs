@@ -56,6 +56,11 @@ public class TestMatchmaker : Photon.PunBehaviour
 		}
     }
 
+	public void RoomDisconnect() {
+		PhotonNetwork.LeaveRoom ();
+		
+	}
+
 //	public override void OnPlayerJoined()
 //	{
 //

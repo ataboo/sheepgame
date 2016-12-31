@@ -122,12 +122,15 @@
      <Compile Include="Assets\PhotonChatApi\ChatState.cs" />
      <Compile Include="Assets\PhotonChatApi\ChatUserStatus.cs" />
      <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
+     <Compile Include="Assets\Scripts\HubDemo\DemoHubManager.cs" />
+     <Compile Include="Assets\Scripts\HubDemo\ToDemoHubButton.cs" />
      <Compile Include="Assets\Scripts\Mono\CameraController.cs" />
      <Compile Include="Assets\Scripts\Mono\DeathCheck.cs" />
      <Compile Include="Assets\Scripts\Mono\Dog\DogDisplay.cs" />
      <Compile Include="Assets\Scripts\Mono\EntitySpawner.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic.cs" />
      <Compile Include="Assets\Scripts\Mono\MenuController.cs" />
+     <Compile Include="Assets\Scripts\Mono\PlayerRow.cs" />
      <Compile Include="Assets\Scripts\Mono\Sheep\SheepController.cs" />
      <Compile Include="Assets\Scripts\Mono\Sheep\SheepDisplay.cs" />
      <Compile Include="Assets\Scripts\Mono\SheepCounter.cs" />
