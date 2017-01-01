@@ -142,7 +142,6 @@
      <Compile Include="Assets\Scripts\Network\Old\DogController.cs" />
      <Compile Include="Assets\Scripts\Network\Old\PlayerMover.cs" />
      <Compile Include="Assets\Scripts\Network\Old\SheepNetworkManager.cs" />
-     <Compile Include="Assets\Scripts\Network\TestMatchmaker.cs" />
      <Compile Include="Assets\Scripts\Utility\AtaUtility.cs" />
      <None Include="Assets\Photon Unity Networking\link.xml" />
      <None Include="Assets\Plugins\Photon3Unity3D.xml" />

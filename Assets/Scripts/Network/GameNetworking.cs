@@ -1,20 +1,47 @@
 using UnityEngine;
 
+public interface NetworkListener {
+	void OnPhotonError(string message);
+}
+
 public class GameNetworking : Photon.PunBehaviour
 {
 	private PhotonView myPhotonView;
 	private EntitySpawner entitySpawner;
-	private MenuController menuController;
+	public NetworkListener networkListener;
 
-	private const int MAX_PLAYERS = 2;
+	private const int MAX_PLAYERS = 4;
+
+	private static GameNetworking instance;
+
+	public static GameNetworking Instance {
+		get {
+			if (instance == null) {
+				instance = FindObjectOfType (typeof(GameNetworking)) as GameNetworking;
+			}
+
+			return instance;
+		}
+	}
 
 
 	// Use this for initialization
+
+	public void Awake() {
+		if (Instance != null && Instance != this) {
+			Destroy (gameObject);
+		}
+
+		DontDestroyOnLoad (gameObject);
+
+		entitySpawner = GetComponent<EntitySpawner> ();
+	}
+
 	public void Start()
 	{
-		entitySpawner = GetComponent<EntitySpawner> ();
-		menuController = GetComponent<MenuController> ();
+	}
 
+	public void ConnectToPhoton() {
 		if( PhotonNetwork.connectionState != ConnectionState.Disconnected )
 		{
 			return;
@@ -27,15 +54,8 @@ public class GameNetworking : Photon.PunBehaviour
 		}
 		catch
 		{
-			Debug.LogWarning( "Couldn't connect to server" );
+			SendError ("Couldn't connect to server.");
 		}
-	}
-
-	public override void OnJoinedLobby()
-	{
-		Debug.Log ("OnJoinedLobby");
-
-		menuController.OnJoinedLobby ();
 	}
 
 	public void JoinRoom(string roomName) {
@@ -44,19 +64,19 @@ public class GameNetworking : Photon.PunBehaviour
 
 	public override void OnFailedToConnectToPhoton (DisconnectCause cause)
 	{
-		menuController.OnPhotonError ("Failed to connect to Photon Network.");
+		SendError ("Failed to connect to Photon Network.");
 		Debug.LogError ("Failed to connect to photon with cause: " + cause);
 	}
 
 	public override void OnPhotonJoinRoomFailed (object[] codeAndMsg)
 	{
-		menuController.OnPhotonError ((string)codeAndMsg[1]);
+		SendError ((string)codeAndMsg[1]);
 		Debug.LogError ("Failed to join room with code: " + codeAndMsg[0] + " and message: " + codeAndMsg[1]);
 	}
 
 	public override void OnPhotonCreateRoomFailed (object[] codeAndMsg)
 	{
-		menuController.OnPhotonError ((string)codeAndMsg[1]);
+		SendError ((string)codeAndMsg[1]);
 		Debug.LogError ("Failed to create room with code: " + codeAndMsg[0] + " and message: " + codeAndMsg[1]);
 	}
 
@@ -66,51 +86,11 @@ public class GameNetworking : Photon.PunBehaviour
 		PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
 	}
 
-	public override void OnJoinedRoom()
-	{
-		Debug.Log ("OnJoinedRoom");
-		menuController.OnJoinedRoom ();
-		InitLobbyPlayer();
-	}
+	private void SendError(string message) {
+		Debug.LogError ("Sending Photon Error: " + message);
 
-	private GameObject InitLobbyPlayer() {
-		return PhotonNetwork.Instantiate ("PCLobbyRow", Vector3.zero, Quaternion.Euler (Vector3.zero), 0);
-	}
-
-	private void InitLevel() {
-		entitySpawner.SpawnDog ();
-		entitySpawner.SpawnDog ();
-
-		if (PhotonNetwork.isMasterClient) {
-			entitySpawner.InitialSheepSpawn ();
+		if (networkListener != null) {
+			networkListener.OnPhotonError (message);
 		}
 	}
-
-	public void RoomDisconnect() {
-		PhotonNetwork.LeaveRoom ();
-	}
-
-	//	public override void OnPlayerJoined()
-	//	{
-	//
-	//	}
-
-	//    public void OnGUI()
-	//    {
-	//        GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
-	//
-	//        if (PhotonNetwork.inRoom)
-	//        {
-	//            bool shoutMarco = GameLogic.playerWhoIsIt == PhotonNetwork.player.ID;
-	//
-	//            if (shoutMarco && GUILayout.Button("Marco!"))
-	//            {
-	//                myPhotonView.RPC("Marco", PhotonTargets.All);
-	//            }
-	//            if (!shoutMarco && GUILayout.Button("Polo!"))
-	//            {
-	//                myPhotonView.RPC("Polo", PhotonTargets.All);
-	//            }
-	//        }
-	//    }
 }

@@ -4,7 +4,6 @@ using UnityEngine.Networking;
 
 public class EntitySpawner : MonoBehaviour {
 
-	public int sheepCount = 12;
 	public Vector2 spawnRadRange = new Vector2(2f, 10f);
 	public float spawnCheckRad = 1f;
 	public GameObject sheepPrefab;
@@ -14,19 +13,12 @@ public class EntitySpawner : MonoBehaviour {
 	private List<Transform> sheepSpawns = new List<Transform>();
 	private Transform dogSpawnOne;
 	private UIInterface uiInterface;
-	private CameraController camController;
 
 	public void Awake() {
 	}
 
 	public void Start() {
 		GetSpawnPoints();
-		GameObject camObj = GameObject.FindGameObjectWithTag ("Camera");
-		camController = camObj.GetComponent<CameraController>();
-	}
-
-	public void ServerStart() {
-		InitialSheepSpawn ();
 	}
 		
 	public void RespawnDog(GameObject dog) {
@@ -48,26 +40,20 @@ public class EntitySpawner : MonoBehaviour {
 	public void SpawnDog() {
 		GameObject dog = PhotonNetwork.Instantiate("PCCollie", Vector3.zero, Quaternion.identity, 0);
 
-		PlayerControl playerControl = dog.GetComponent<PlayerControl>();
-
 		RespawnDog (dog);
 	}
 	
 	private void SpawnSheep(Transform basePosition) {
 		Vector3 spawnPos = MakeSpawnPoint(basePosition);
 
-		GameObject sheep = (GameObject) PhotonNetwork.InstantiateSceneObject("NPCNetSheep", spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0), 0, null);
+		PhotonNetwork.InstantiateSceneObject("NPCNetSheep", spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0), 0, null);
 	}
 
 	public bool ShouldBeActive(GameObject entity) {
 		return true;
 	}
 
-	public int GetSheepCount() {
-		return sheepCount;
-	}
-
-	public void InitialSheepSpawn() {		
+	public void InitialSheepSpawn(int sheepCount) {		
 		for (int i=0; i < sheepCount; i++) {
 			int spawnPointIndex = Random.Range(0, sheepSpawns.Count);
 

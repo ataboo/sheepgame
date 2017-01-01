@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
 
     private Camera cam;
 
-    public void OnEnable()
+    public void Start()
     {
 		cam = GetComponent<Camera>();
     }
@@ -31,17 +31,20 @@ public class CameraController : MonoBehaviour
 
     private void MoveCam()
     {
-        if (dogOne == null)
+		GameObject firstDog = dogOne == null ? dogTwo : dogOne;
+		GameObject secondDog = dogOne == null ? null : dogTwo;
+
+		if (firstDog == null)
         {
             return;
         }
 
         float vertMinHeight = wideActive ? MinCamHeight * 4f : MinCamHeight;
-        Vector3 centerPos = dogOne.transform.position;
+		Vector3 centerPos = firstDog.transform.position;
 
-        if (dogTwo != null)
+		if (secondDog != null)
         {
-            Vector3 deltaDog = dogOne.transform.position - dogTwo.transform.position;
+			Vector3 deltaDog = firstDog.transform.position - secondDog.transform.position;
             centerPos = deltaDog / 2f + dogTwo.transform.position;
             vertMinHeight = Mathf.Max(vertMinHeight, Mathf.Abs(deltaDog.z * 3f));
             vertMinHeight = Mathf.Max(vertMinHeight, Mathf.Abs(deltaDog.x * 3f / cam.aspect));
@@ -86,6 +89,14 @@ public class CameraController : MonoBehaviour
 			return PlayerControl.DogControl.DogTwo;
 		}
 
-		throw new UnityException ("Failed to RegisterDog with CameraController as both slots are full.");
+		throw new UnityException ("CameraController cannot follow more than 2 dogs.");
+	}
+
+	public void UnregisterDog(PlayerControl playerControl) {
+		if (playerControl.dogControl == PlayerControl.DogControl.DogOne) {
+			dogOne = null;
+		} else if (playerControl.dogControl == PlayerControl.DogControl.DogTwo){
+			dogTwo = null;
+		}
 	}
 }

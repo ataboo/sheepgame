@@ -2,20 +2,21 @@
 using UnityEngine.Networking;
 
 public interface DeathListener {
-	void IsKill(GameObject gameObject, bool respawnable);
+	void IsKill(GameObject gameObject);
 }
 
 public class DeathCheck : MonoBehaviour {
-	public bool respawnable = false;
 	public float deathHeight = -20f;
 	private DeathListener deathListener;
 
 	public void Awake() {
-		this.deathListener = (DeathListener) GameObject.FindGameObjectWithTag ("LevelManager").GetComponent<GameNetworking> ();
+		this.deathListener = (DeathListener) GameObject.FindGameObjectWithTag ("GameLogic").GetComponent<DeathListener> ();
 	}
 
 	public void Update () {
-
+		if (!PhotonNetwork.isMasterClient) {
+			return;
+		}
 		if (transform.position.y < deathHeight) {
 			isKill();
 		}
@@ -25,7 +26,7 @@ public class DeathCheck : MonoBehaviour {
 		if (deathListener == null) {
 			Debug.LogError("DeathCheck has no entitydelegate.");
 		} else {
-			deathListener.IsKill(gameObject, respawnable);
+			deathListener.IsKill(gameObject);
 		}
 	}
 }

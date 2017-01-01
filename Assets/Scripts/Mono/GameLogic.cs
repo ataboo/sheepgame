@@ -2,12 +2,15 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using System.Collections;
 
 
 public class GameLogic : MonoBehaviour, CountListener, DeathListener {
 	public static PhotonView photonView;
-	
-	public int totalSheep = 0;
+
+	private const int SPAWN_COUNT = 8;
+
+	public int totalSheep = SPAWN_COUNT;
 	public int sheepInGoal = 0;
 	public int deadSheep = 0;
 	public UIInterface uiInterface;
@@ -17,25 +20,32 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener {
 	private float startTime;
 	private List<GameObject> entities;
 
+	private bool gameOver = false;
+
 	public void Awake() {
 		GameLogic.photonView = GetComponent<PhotonView> ();
 		this.spawner = GetComponent<EntitySpawner> ();
 	}
 
 	public void Start() {
-		InitValues ();
-		this.totalSheep = spawner.sheepCount;
+		Initialize ();
 		SheepCounter sheepCounter = GameObject.FindGameObjectWithTag ("sheep-target").GetComponent<SheepCounter> ();
 		sheepCounter.SetListener (this);
-	}
 
-	public void ExitToMenu() {
-		SetPause(false);
-		SceneManager.LoadScene("MenuScene");
+		if (PhotonNetwork.isMasterClient) {
+			spawner.InitialSheepSpawn (SPAWN_COUNT);
+		}
+
+		spawner.SpawnDog ();
+		spawner.SpawnDog ();
 	}
 		
 	[PunRPC]
 	public void OnCountChange(int newCount) {
+		if (gameOver) {
+			return;
+		}
+
 		this.sheepInGoal = newCount;
 
 		UpdateHud ();
@@ -45,26 +55,63 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener {
 		}
 	}
 
-	//============== DeathListener ================
-	public void IsKill(GameObject gameObject, bool respawnable) {
-		if (respawnable) {
+	public void OnEnable() {
+		SceneManager.sceneLoaded += OnLevelDoneLoading;
+	}
+
+	public void OnDisable() {
+		SceneManager.sceneLoaded -= OnLevelDoneLoading;
+	}
+
+	public void OnLevelDoneLoading(Scene scene, LoadSceneMode mode) {
+		// Startup Photon Networking again now that the level is loaded.
+		PhotonNetwork.isMessageQueueRunning = true;
+	}
+		
+	public void IsKill(GameObject gameObject) {
+		if (IsDog(gameObject)) {
 			spawner.RespawnDog(gameObject);
 		} else {
 			DestroyImmediate (gameObject);
-			deadSheep++;
+
+			if (IsSheep (gameObject)) {
+				deadSheep++;
+			}
 
 			GetEntities (true);
 			UpdateHud ();
 		}
 	}
 
-	//============== IGameState ================
+	public void QuitToMain(bool leaveRoom) {
+		if (leaveRoom) {
+			PhotonNetwork.LeaveRoom ();
+		}
+
+		LoadLobby ();
+	}
+
+	private void LoadLobby() {
+		PhotonNetwork.isMessageQueueRunning = false;
+		SceneManager.LoadScene ("Lobby");
+	}
+
+
+	private bool IsSheep(GameObject gameObject) {
+		return gameObject.GetComponent<SheepController> () != null;
+	}
+
+	private bool IsDog(GameObject gameObject) {
+		return gameObject.GetComponent<PlayerControl> () != null;
+	}
+		
 	public bool IsPaused() {
 		return paused;
 	}
 
-	private void InitValues() {
+	private void Initialize() {
 		deadSheep = 0;
+		totalSheep = SPAWN_COUNT;
 		startTime = Time.time;
 	}
 		
@@ -72,10 +119,23 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener {
 		uiInterface.UpdateHud(totalSheep, sheepInGoal, deadSheep);
 	}
 
-	[PunRPC]
-	void ShowEndScreen() {
-		SetPause(true);
+	private void DisplayEndScreen() {
 		uiInterface.ShowEndScreen(totalSheep, sheepInGoal, deadSheep, Time.time - startTime);
+	}
+
+	[PunRPC]
+	void EndGame(int totalSheep, int sheepInGoal, int deadSheep) {
+		//SetPause(true);
+		this.totalSheep = totalSheep; 
+		this.sheepInGoal = sheepInGoal; 
+		this.deadSheep = deadSheep;
+
+		UpdateHud();
+		DisplayEndScreen ();
+
+		gameOver = true;
+
+		StartCoroutine (CountDown (5));
 	}
 
 	public List<GameObject> GetEntities(bool refresh = false) {
@@ -94,14 +154,25 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener {
 
 	private void CheckEnd() {
 		if (totalSheep - sheepInGoal - deadSheep == 0) {
-			SetPause(true);
-			//Show EndScreen
+			photonView.RPC ("EndGame", PhotonTargets.All, totalSheep, sheepInGoal, deadSheep);
 		}
 	}
 		
 	private void SetPause(bool paused) {
 		this.paused = paused;
 		Time.timeScale = paused ? 0f : 1f;
+	}
+
+	private IEnumerator CountDown(int startTime) {
+		int count = startTime;
+
+		while (count > 0) {
+			uiInterface.SetLeaveCount (count);
+			yield return new WaitForSeconds(1);
+			count--;
+		}
+
+		QuitToMain (false);
 	}
 }
 

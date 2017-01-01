@@ -64,6 +64,7 @@ public class UIInterface: MonoBehaviour, UIListener {
 	public Text endTitle;
 	public Text endSubtitle;
 	public Text endDetail;
+	public Text endLeaveText;
 
 	public void UpdateHud(int total, int inGoal, int dead) {
 		int wildCount = total - inGoal - dead;
@@ -81,6 +82,10 @@ public class UIInterface: MonoBehaviour, UIListener {
 		endDetail.text = summary.Details();
 
 		endPanel.SetActive(true);
+	}
+
+	public void SetLeaveCount(int count) {
+		endLeaveText.text = "Back to Lobby in " + count + "...";
 	}
 
 	public void HideEndScreen() {

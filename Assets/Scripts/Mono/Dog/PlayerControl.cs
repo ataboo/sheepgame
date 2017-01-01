@@ -22,24 +22,29 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 	private float speed;
 	private bool running = false;
 
+	public DogControl dogControl;
 	public bool isLocalControl = false;
 
 	public bool isActive = false;
 	private Spooker spooker;
 	private CharacterController controller;
+	private CameraController cameraController;
+	private PhotonView photonView;
 
 	public void Awake() {
 		spooker = GetComponent<Spooker> ();
+		photonView = GetComponent <PhotonView> ();
+		cameraController = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController> ();
 		speed = walkSpeed;
 
-		this.isLocalControl = GetComponent<PhotonView> ().isMine;
+		isLocalControl = photonView.isMine;
 		this.spooker.isLocalControl = isLocalControl;
 	}
 
 	public void Start() {
 		if (isLocalControl) {
-			DogControl dogControl = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController> ().RegisterDog (this);
-			this.SetControls (dogControl);
+			dogControl = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController> ().RegisterDog (this);
+			this.SetControls ();
 		}
 	}
 
@@ -57,13 +62,25 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 		}
 	}
 
-	public void InitCamera() {
-		DogControl dogControl = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController>().RegisterDog (this);
-
-		SetControls (dogControl);
+	public void OnDestroy() {
+		if (isLocalControl) {
+			UnregisterFromCamera ();
+		}
 	}
 
-	public void SetControls(DogControl dogControl) {
+	private void RegisterWithCamera() {
+		dogControl =cameraController.RegisterDog (this);
+
+		SetControls ();
+	}
+
+	private void UnregisterFromCamera() {
+		if (cameraController != null) {
+			cameraController.UnregisterDog (this);
+		}
+	}
+
+	public void SetControls() {
 		switch(dogControl) {
 		case DogControl.DogOne:
 			vertAxis = "Vertical";
@@ -185,6 +202,7 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 		//return (lastCollisionFlag & CollisionFlags.CollidedBelow) != 0;
 		return true;
 	}
+
 		
 
 }

@@ -20,62 +20,18 @@ Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Dat
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Photon3Unity3D.dll (this message is harmless)
 Loading C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\Photon3Unity3D.dll into Unity Child Domain
-- Completed reload, in  0.177 seconds
+- Completed reload, in  0.161 seconds
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\ataboo\projects\Sheep-Game\TestBuilds\sheep-game_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.815919 ms
+UnloadTime: 0.863177 ms
+Rsn done loading
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 2750 -> priority: 1 
-  Thread -> id: 1778 -> priority: 1 
-OnJoinedLobby
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-OnJoinedRoom
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Ran Coroutine...
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Sending Count: 5
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Ran Coroutine...
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Sending Count: 5
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Sending Count: 4
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Sending Count: 3
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Sending Count: 2
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Sending Count: 1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Sending Count: 0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-OnJoinedLobby
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
+  Thread -> id: c70 -> priority: 1 
+  Thread -> id: 1f90 -> priority: 1 

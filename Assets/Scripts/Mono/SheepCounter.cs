@@ -13,6 +13,7 @@ public class SheepCounter : MonoBehaviour {
 
 		SheepController sc = collider.gameObject.GetComponent<SheepController>();
 
+		//if (true){
 		if (sc != null) {
 			sheepCount++;
 			SendCount();

@@ -22,23 +22,6 @@ public class PlayerRow : MonoBehaviour, INetworkCharacter {
 		this.listener = listener;
 	}
 
-	public void SetPlayerName() {
-		string playerName = photonView.owner.NickName;
-
-		if (playerName == "") {
-			playerName = "Player " + photonView.ownerId;
-		}
-
-		if (photonView.isMine) {
-			rowGroup.interactable = true;
-			readyGroup.interactable = true;
-
-			this.playerName.text = playerName + " (you)";
-		} else {
-			this.playerName.text = playerName; 
-		}
-	}
-
 	void Awake() {
 		photonView = GetComponent<PhotonView> ();
 		rowGroup = GetComponent<CanvasGroup> ();
@@ -47,7 +30,25 @@ public class PlayerRow : MonoBehaviour, INetworkCharacter {
 
 	// Use this for initialization
 	void Start () {
-		GameObject.Find ("MainCanvas").GetComponent<MenuController> ().OnMakeLobbyPlayer (gameObject);
+		SetPlayerName ();
+		GameObject.Find ("MainCanvas").GetComponent<MenuController> ().AddLobbyPlayer (gameObject);
+	}
+	
+	private void SetPlayerName() {
+		string playerName = photonView.owner.NickName;
+		
+		if (playerName == "") {
+			playerName = "Player " + photonView.ownerId;
+		}
+		
+		if (photonView.isMine) {
+			rowGroup.interactable = true;
+			readyGroup.interactable = true;
+			
+			this.playerName.text = playerName + " (you)";
+		} else {
+			this.playerName.text = playerName; 
+		}
 	}
 	
 	// Update is called once per frame
