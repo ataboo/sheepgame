@@ -36,8 +36,10 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener {
 			spawner.InitialSheepSpawn (SPAWN_COUNT);
 		}
 
-		spawner.SpawnDog ();
-		spawner.SpawnDog ();
+		string dogOptionName = (string)LevelSettings.DogOption.OPTION_KEYS [(int)PhotonNetwork.player.CustomProperties [SheepGamePlayerRow.DOG_SELECT_KEY]];
+		LevelSettings.DogOption dogOption = LevelSettings.DogOption.OPTIONS[dogOptionName];
+
+		spawner.SpawnDog (dogOption);
 	}
 		
 	[PunRPC]

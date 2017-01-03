@@ -1,51 +1,47 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 
-public class MenuController : MonoBehaviour, PlayerRowListener, NetworkListener {
+public abstract class MenuController : MonoBehaviour, PlayerRowListener, NetworkListener {
+	public const string LEVEL_SELECT_KEY = "level_select";
+
 	public CanvasGroup homeMenuGroup;
-	public CanvasGroup onlineGroup;
-	public GameObject lobbyMenu;
 
-	public GameObject menuPanel;
-
+	public CanvasGroup homeOnlineGroup;
 	public InputField roomNameField;
 	public InputField playerNameField;
+
+	public GameObject lobbyMenu;
 	public Text lobbyTitle;
 	public Text countDownText;
+	public Dropdown levelSelect;
 
-	public GameObject pcLobbyRow;
-
-	public Transform playerRows;
+	public Transform playerRowHolder;
 
 	private PhotonView photonView;
 
 	private int countTime = -1;
 
-	private GameNetworking gameNetworking;
+	private IGameNetworking gameNetworking;
 
 	IEnumerator countdownCoroutine;
 
-//	public void OpenSoloTest() {
-//		SceneManager.LoadScene("SoloTestLevel");
-//	}
+	abstract public List<string> LevelOptions ();
 
-
-
-//	public void OpenMultiTest()
-//	{
-//		SceneManager.LoadScene ("Lobby");
-//	}
+	abstract protected string LobbyRowPrefabName ();
 
 	public void Awake() {
 		this.gameNetworking = GameNetworking.Instance;
-		gameNetworking.networkListener = this;
+		gameNetworking.SetNetworkListener(this);
 		this.photonView = GetComponent<PhotonView> ();
 	}
 
 	public void Start() {
+		levelSelect.ClearOptions ();
+		levelSelect.AddOptions (LevelOptions());
 	}
 
 	public void OnEnable() {
@@ -57,8 +53,6 @@ public class MenuController : MonoBehaviour, PlayerRowListener, NetworkListener 
 	}
 
 	public void OnLevelDoneLoading(Scene scene, LoadSceneMode mode) {
-		Debug.Log ("Rsn done loading");
-
 		PhotonNetwork.isMessageQueueRunning = true;
 
 		if (PhotonNetwork.inRoom) {
@@ -77,7 +71,7 @@ public class MenuController : MonoBehaviour, PlayerRowListener, NetworkListener 
 	}
 
 	public void OnJoinedLobby() {
-		onlineGroup.interactable = true;
+		homeOnlineGroup.interactable = true;
 	}
 
 	public void OnLobbyBack() {
@@ -87,7 +81,7 @@ public class MenuController : MonoBehaviour, PlayerRowListener, NetworkListener 
 	}
 
 	private void SortPlayerRows() {
-		PhotonView[] photonViews = playerRows.GetComponentsInChildren<PhotonView> (true);
+		PhotonView[] photonViews = playerRowHolder.GetComponentsInChildren<PhotonView> (true);
 
 		Array.Sort (photonViews, delegate(PhotonView photon1, PhotonView photon2) {
 			return photon1.ownerId.CompareTo (photon2.ownerId);
@@ -125,6 +119,13 @@ public class MenuController : MonoBehaviour, PlayerRowListener, NetworkListener 
 		InitLobbyPlayer ();
 
 		lobbyMenu.SetActive (true);
+
+		if (PhotonNetwork.isMasterClient) {
+			levelSelect.enabled = true;
+			if (!PhotonNetwork.room.CustomProperties.ContainsKey (LEVEL_SELECT_KEY)) {
+				OnLevelSelect (0);
+			}
+		}
 	}
 
 	public void OnPhotonError(string errorMessage) {
@@ -161,52 +162,65 @@ public class MenuController : MonoBehaviour, PlayerRowListener, NetworkListener 
 	[PunRPC]
 	public void CheckAllReady() 
 	{
-		ResetCountdown ();
-
-		foreach(GameObject rowObject in GameObject.FindGameObjectsWithTag("Player")) {
-			PlayerRow playerRow = rowObject.GetComponent<PlayerRow> ();
-			if (playerRow == null) {
-				continue;
-			}
-			if (!playerRow.readyToggle.isOn) {
-				photonView.RPC ("SetCountdown", PhotonTargets.All, -1);
-				return;
-			}
+		if (!PhotonNetwork.isMasterClient) {
+			return;
 		}
 
-		countdownCoroutine = CountDown ();
+		if (AllPlayersReady ()) {
+			StartCountdown ();
+		} else {
+			AbortCountdown ();
+		}
+	}
 
+	private void StartCountdown() {
+		levelSelect.enabled = false;
 		this.countTime = 5;
+
+		countdownCoroutine = CountDown ();
 		StartCoroutine (countdownCoroutine);
 	}
 
-	private void ResetCountdown() {
+	private void AbortCountdown() {
 		if (countdownCoroutine != null) {
 			StopCoroutine (countdownCoroutine);
 		}
+
+		levelSelect.enabled = true;
+		photonView.RPC ("SetCountdown", PhotonTargets.All, -1);
+	}
+
+	private bool AllPlayersReady() {
+		foreach(GameObject playerRow in PlayerRows()) {
+			if (!playerRow.GetComponent<IPlayerRow>().IsReady()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private GameObject[] PlayerRows() {
+		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+
+		return Array.FindAll (players, player => player.GetComponent<IPlayerRow> () != null);
 	}
 
 	[PunRPC]
 	public void SetCountdown(int count)
 	{
 		countTime = count;
+		countDownText.enabled = countTime > -1;
 
-		if (countTime > 0) {
-			countDownText.enabled = true;
-			countDownText.text = "Starting in " + count + "...";
-		} else if (countTime == 0) {
+		if (countTime == 0) {
 			countDownText.text = "Launching...";
-
 			countTime = -1;
-			LaunchRampLevel ();
+			LaunchLevel ();
 		} else {
-			countDownText.enabled = false;
+			countDownText.text = "Starting in " + count + "...";
 		}
 	}
 
 	private IEnumerator CountDown() {
-		Debug.Log ("Ran Coroutine...");
-
 		while (countTime >= 0) {
 			Debug.Log ("Sending Count: " + countTime);
 			photonView.RPC ("SetCountdown", PhotonTargets.All, countTime);
@@ -215,27 +229,47 @@ public class MenuController : MonoBehaviour, PlayerRowListener, NetworkListener 
 		}
 	}
 
-	private void LaunchRampLevel() {
+	private void LaunchLevel() {
 		PhotonNetwork.isMessageQueueRunning = false;
-		SceneManager.LoadScene("TestRamp");
-	}
+		string levelName = LevelSettings.LevelOption.OPTION_KEYS[(int)PhotonNetwork.room.CustomProperties [LEVEL_SELECT_KEY]];
+		string sceneName = LevelSettings.LevelOption.OPTIONS [levelName].SceneName;
 
-	private void HideMenu(bool hide) {
-		menuPanel.SetActive(!hide);
-		//inGameMenu.SetActive (hide);
+		SceneManager.LoadScene(sceneName);
 	}
 
 	/// <summary>
 	/// Adds a newly created lobby player prefab to playerRows.
 	/// </summary>
 	/// <param name="lobbyPlayer">Lobby player prefab.</param>
-	public void AddLobbyPlayer(GameObject lobbyPlayer) {
-		lobbyPlayer.GetComponent<PlayerRow> ().SetListener (this);
-		lobbyPlayer.transform.SetParent (playerRows, false);
+	public void DockLobbyPlayer(GameObject lobbyPlayer) {
+		lobbyPlayer.transform.SetParent (playerRowHolder, false);
 		SortPlayerRows ();
 	}
 
 	private void InitLobbyPlayer() {
-		PhotonNetwork.Instantiate ("PCLobbyRow", Vector3.zero, Quaternion.Euler (Vector3.zero), 0);
+		PhotonNetwork.Instantiate (LobbyRowPrefabName(), Vector3.zero, Quaternion.Euler (Vector3.zero), 0);
+	}
+
+	public void OnPlayerPropertiesChanged (PhotonPlayer player, ExitGames.Client.Photon.Hashtable changedProperties)
+	{
+	}
+
+	public void OnRoomPropertiesChanged (ExitGames.Client.Photon.Hashtable changedProperties)
+	{
+		if (PhotonNetwork.isMasterClient) {
+			return;
+		}
+
+		if (changedProperties.ContainsKey(LEVEL_SELECT_KEY)) {
+			levelSelect.value = (int)changedProperties[LEVEL_SELECT_KEY];	
+		}
+	}
+
+	public void OnLevelSelect(int value) {
+		if (!PhotonNetwork.isMasterClient) {
+			return;
+		}
+
+		PhotonNetwork.room.SetCustomProperties (new ExitGames.Client.Photon.Hashtable () { {LEVEL_SELECT_KEY, value } }, null, false);
 	}
 }

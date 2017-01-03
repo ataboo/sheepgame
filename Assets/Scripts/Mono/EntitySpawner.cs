@@ -37,10 +37,11 @@ public class EntitySpawner : MonoBehaviour {
 		dog.GetComponent<PhotonView> ().RPC ("Teleport", PhotonTargets.AllBuffered, dogSpawn);
 	}
 
-	public void SpawnDog() {
-		GameObject dog = PhotonNetwork.Instantiate("PCCollie", Vector3.zero, Quaternion.identity, 0);
-
-		RespawnDog (dog);
+	public void SpawnDog(LevelSettings.DogOption dogOption) {
+		for(int i=0; i<dogOption.DogCount; i++) {
+			GameObject dog = PhotonNetwork.Instantiate(dogOption.PrefabName, Vector3.zero, Quaternion.identity, 0);
+			RespawnDog (dog);
+		}
 	}
 	
 	private void SpawnSheep(Transform basePosition) {
