@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/TestRamp.unity
+- path: Assets/Scenes/VSCrater.unity
   isLoaded: 1
   isActive: 1

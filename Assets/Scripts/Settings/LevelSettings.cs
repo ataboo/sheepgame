@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class LevelSettings : MonoBehaviour {
 	public sealed class LevelOption
 	{
-		public static readonly LevelOption VS_BARNS = new LevelOption ("Versus Barn", "VsBarn");
+		public static readonly LevelOption VS_BARNS = new LevelOption ("Versus Crater", "VsCrater");
 		public static readonly LevelOption COOP_RAMP = new LevelOption ("Coop Ramp", "CoopRamp");
 
 		public static readonly Dictionary<string, LevelOption> OPTIONS = new Dictionary<string, LevelOption>(){ 
