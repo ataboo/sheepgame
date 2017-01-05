@@ -7,10 +7,12 @@ public class LevelSettings : MonoBehaviour {
 	{
 		public static readonly LevelOption VS_BARNS = new LevelOption ("Versus Crater", "VsCrater");
 		public static readonly LevelOption COOP_RAMP = new LevelOption ("Coop Ramp", "CoopRamp");
+		public static readonly LevelOption KOTH_CASTLE = new LevelOption ("KOTH Castle", "KOTH_Castle");
 
 		public static readonly Dictionary<string, LevelOption> OPTIONS = new Dictionary<string, LevelOption>(){ 
 			{COOP_RAMP.ToString(), COOP_RAMP}, 
-			{VS_BARNS.ToString(), VS_BARNS}
+			{VS_BARNS.ToString(), VS_BARNS},
+			{KOTH_CASTLE.ToString(), KOTH_CASTLE}
 		};
 
 		public static List<string> OPTION_KEYS {
