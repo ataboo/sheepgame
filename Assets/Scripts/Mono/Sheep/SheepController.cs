@@ -7,13 +7,14 @@ public enum SheepState
 	Panicking,
 	Herding,
 	Wandering,
+	Pausing,
 	Eating,
 	Dead,
 	Ballistic,
 	Recovering
 }
 
-public class SheepController : MonoBehaviour, INetworkCharacter, ISheepDisplay {
+public class SheepController : MonoBehaviour, INetworkCharacter, ISheepDisplay, SheepRadarListener {
 
 	NavMeshAgent navAgent;
 
@@ -281,5 +282,15 @@ public class SheepController : MonoBehaviour, INetworkCharacter, ISheepDisplay {
 
 	public SheepState GetSheepState() {
 		return this.sheepState;
+	}
+
+	public void DetectedGrassCounter (GrassCounter grassCounter)
+	{
+		
+	}
+
+	public void LostGrassCounter (GrassCounter grassCounter)
+	{
+		
 	}
 }
