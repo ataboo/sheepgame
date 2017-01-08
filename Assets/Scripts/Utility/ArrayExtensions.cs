@@ -10,7 +10,13 @@ public static class ArrayExtensions {
 		return subArr;
 	}
 
-	public static T[] Append<T>(this T[] first, T[] second) {
+	/// <summary>
+	/// Create an array combining this and another array.
+	/// </summary>
+	/// <param name="first">First array.</param>
+	/// <param name="second">Second array.</param>
+	/// <typeparam name="T">The array type</typeparam>
+	public static T[] Appended<T>(this T[] first, T[] second) {
 		T[] combined = new T[first.Length + second.Length];
 
 		Array.Copy (first, combined, first.Length);

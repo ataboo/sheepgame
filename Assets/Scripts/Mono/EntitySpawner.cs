@@ -66,7 +66,7 @@ public class EntitySpawner : MonoBehaviour {
 		int tryCount = 0;
 
 		while(true) {
-			Vector3 spawnPos = randPoint(basePosition);
+			Vector3 spawnPos = AtaUtility.RandPointInRadius(basePosition.position, spawnRadRange.x, spawnRadRange.y);
 			if(!Physics.CheckSphere(spawnPos, spawnCheckRad, LayerMask.GetMask("Default"))) {
 				return spawnPos;
 			}
@@ -78,12 +78,6 @@ public class EntitySpawner : MonoBehaviour {
 
 			tryCount++;
 		}
-	}
-
-	private Vector3 randPoint(Transform basePosition) {
-		Vector2 randPoint = Random.insideUnitCircle * Random.Range(spawnRadRange.x, spawnRadRange.y);
-
-		return new Vector3(randPoint.x + basePosition.position.x, basePosition.position.y, randPoint.y + basePosition.position.z);
 	}
 
 	private void GetSpawnPoints() {

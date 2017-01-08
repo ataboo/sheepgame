@@ -1,59 +1,51 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public enum SheepState
-{
-	Idle,
-	Panicking,
-	Herding,
-	Wandering,
-	Pausing,
-	Eating,
-	Dead,
-	Ballistic,
-	Recovering
+public interface EatingListener {
+	void JustAte (EntityController entity);
 }
-
-public class SheepController : MonoBehaviour, INetworkCharacter, ISheepDisplay, SheepRadarListener {
-
+	
+public class SheepController : EntityController {
 	NavMeshAgent navAgent;
-
-	public float maxFriendRange = 100f;
-	public float minFriendRange = 4f;
-	public float maxEnemyRange = 30f;
-
-	public float walkingSpeed = 5;
-	public float runningSpeed = 15;
-
-	public float maxLaunchForce = 100f;
-	public float launchDistance = 3f;
-
-	public Vector2 wanderTimeRange = new Vector2(2.0f, 4.0f);
-
-	public Vector2 eatTimeRange = new Vector2(3.0f, 4.0f);
 
 	public SheepState sheepState = SheepState.Idle;
 
-	private float actionTimeout = 0f;
-
 	private Rigidbody rb;
-
-	public bool isMasterClient = false;
 
 	private Vector3 correctPosition;
 	private Quaternion correctRotation;
+	private SheepBehavior sheepBehavior;
+	private Vector3 navTarget;
+
+	public override string UID_Class {
+		get {
+			return "SH";
+		}
+	}
 
 
-	public void Start() {
+	protected override void EntityAwake ()
+	{
 		rb = GetComponent<Rigidbody> ();
 		navAgent = GetComponent<NavMeshAgent> ();
+		sheepBehavior = GetComponent<SheepBehavior> ();
+	}
 
-		isMasterClient = GetComponent<PhotonView>().isMine;
+	protected override void EntityStart() {
+		
+	}
+
+	protected override void EntityInit() {
+		if (!isMasterClient) {
+			throw new UnityException ("SheepController init should only be called on the master client");
+		}
 
 		navAgent.enabled = isMasterClient;
 	}
-		
-	public void Update () {
+
+
+	protected override void EntityUpdate ()
+	{
 		if (isMasterClient) {
 			UpdateMovement ();
 		} else {
@@ -62,13 +54,8 @@ public class SheepController : MonoBehaviour, INetworkCharacter, ISheepDisplay, 
 	}
 
 	private void UpdateMovement() {
-		if (isMasterClient) {
-			if (sheepState != SheepState.Dead) {
-				Navigate ();
-			}
-		} else {
-			LerpRemoteTransform ();
-		}
+		sheepBehavior.Navigate();
+		this.navTarget = navAgent.destination;
 	}
 
 	private void LerpRemoteTransform()
@@ -81,216 +68,27 @@ public class SheepController : MonoBehaviour, INetworkCharacter, ISheepDisplay, 
 		transform.rotation = Quaternion.Lerp(transform.rotation, correctRotation, Time.deltaTime * 5);
 	}
 
-	private void Navigate() {
-		if (sheepState == SheepState.Ballistic) {
-			if (ShouldRecover()) {
-				sheepState = SheepState.Recovering;
-			} else {
-				return;
-			}
-		}
-
-		if (sheepState == SheepState.Recovering) {
-			if (!Recover()) {
-				return;
-			}
-		}
-
-		bool friend;
-		float magsqr;
-		GameObject closestEntity = ClosestEntity(out friend, out magsqr);
-
-		if (closestEntity != null && !friend) {
-			RunAway(closestEntity);
-		} else {
-			KillTime(closestEntity, magsqr);
-		}
-	}
-
-	private GameObject ClosestEntity(out bool friend, out float magsqr) {
-		float closestFriendSqr = maxFriendRange * maxFriendRange;
-		float closestEnemySqr = maxEnemyRange * maxEnemyRange;
-
-		GameObject closestFriend = null;
-		GameObject closestEnemy = null;
-
-
-		//TODO: detect player
-		foreach (GameObject entity in GameObject.FindGameObjectsWithTag("entity"))
-		{
-			if (entity == gameObject) {
-				continue;
-			}
-
-			if (IsEnemy(entity)) {
-				CloserEntity(ref closestEnemy, ref closestEnemySqr, entity);
-			} else if (IsFriend(entity))  {
-				CloserEntity(ref closestFriend, ref closestFriendSqr, entity);
-			}
-		}
-
-		if (closestEnemy == null) {
-			friend = true;
-			magsqr = closestFriendSqr;
-			return closestFriend;
-		}
-
-		friend = false;
-		magsqr = closestEnemySqr;
-		return closestEnemy;
-	}
-
-	private void CloserEntity(ref GameObject oldClosest, ref float oldMagSqr, GameObject newEntity) {
-		float magSqr = (newEntity.transform.position - transform.position).sqrMagnitude;
-
-		if (magSqr < oldMagSqr) {
-			oldClosest = newEntity;
-			oldMagSqr = magSqr;
-		}
-	}
-
-	private bool IsFriend(GameObject entity) {
-		return entity.GetComponent<SheepController>() != null;
-	}
-
-	private bool IsEnemy(GameObject entity) {
-		Spooker spooker = entity.GetComponent<Spooker>();
-
-		return spooker != null && spooker.active;
-	}
-
-	private void RunAway(GameObject enemy) {
-		sheepState = SheepState.Panicking;
-		navAgent.speed = runningSpeed;
-
-		actionTimeout = Time.time + Random.Range(0.5f, 1.5f);
-
-		Vector3 runPos = (transform.position - enemy.transform.position).normalized * 10f + transform.position;
-		NavMeshHit hit;
-		NavMesh.SamplePosition(runPos, out hit, 10f, 1);
-
-		navAgent.SetDestination(hit.position);
-	}
-
-	public void Launch (float forcePower, Vector3 explosionPos, float forceRadius, float depth) {
-		navAgent.updatePosition = false;
-		navAgent.updateRotation = false;
-		navAgent.enabled = false;
-		rb.constraints = RigidbodyConstraints.None;
-
-		sheepState = SheepState.Ballistic;
-
-		actionTimeout = Time.time + 0.1f;
-
-		rb.AddExplosionForce(forcePower, explosionPos, forceRadius, depth);	
-	}
-	private bool ShouldRecover() {
-		return rb.velocity.sqrMagnitude < 3f;
-	}
-
-	private bool Recover() {
-		Quaternion homeRotation = Quaternion.Euler(0, 0, 0);
-		// TODO: Should check if airborne.
-		if (Quaternion.Angle(rb.rotation, homeRotation) < 5f) {
-			rb.rotation = homeRotation;
-			rb.constraints = RigidbodyConstraints.FreezeRotation;
-			navAgent.updatePosition = true;
-			navAgent.updateRotation = true;
-
-			navAgent.enabled = true;
-
-			sheepState = SheepState.Idle;
-			return true;
-		}
-
-		rb.rotation = Quaternion.RotateTowards(rb.rotation, homeRotation, 100f * Time.deltaTime);
-			
-		return false;
-	}
-
-	private void KillTime(GameObject nearestFriend, float rangeSqr) {
-		if (Time.time > actionTimeout) {
-			navAgent.speed = walkingSpeed;
-			if (nearestFriend != null && rangeSqr > minFriendRange * minFriendRange) {
-				Herd(nearestFriend);
-				return;
-			}
-
-			if (ShouldEat()) {
-				Eat();
-			} else {
-				Wander();
-			}
-		}
-	}
-
-	private void Eat() {
-		actionTimeout = Time.time + Random.Range(eatTimeRange.x, eatTimeRange.y);
-		navAgent.SetDestination(transform.position);
-		sheepState = SheepState.Eating;
-	}
-
-	private void Wander() {
-		actionTimeout = Time.time + Random.Range(wanderTimeRange.x, wanderTimeRange.y);
-		navAgent.SetDestination(getWanderPos());
-		sheepState = SheepState.Wandering;
-	}
-
-	private bool ShouldEat() {
-		//TODO Grass.
-
-		int roll = Random.Range(1, 10);
-
-		return roll > 7;
-	}
-
-	private void Herd(GameObject friend) {
-		navAgent.speed = walkingSpeed;
-		sheepState = SheepState.Herding;
-
-		actionTimeout = Time.time + 0.2f;
-		navAgent.SetDestination(friend.transform.position);
-	}
-
-	private Vector3 getWanderPos() {
-		Vector3 randomDirection = Random.insideUnitSphere * 30f;
-		randomDirection += transform.position;
-		NavMeshHit hit;
-		NavMesh.SamplePosition(randomDirection, out hit, 30f, 1);
-		return hit.position;
-	}
-
-	public object[] GetSyncVars() {
+	protected override object[] GetEntitySyncVars() {
 		object[] syncVars = {
 			transform.position, 
 			transform.rotation, 
-			(int)sheepState
+			(int)sheepState,
+			navTarget
 		};
 
 		return syncVars;
 	}
 
-	public void PutSyncVars(object[] serialized) {
+	protected override void PutEntitySyncVars(object[] serialized) {
 		correctPosition = (Vector3) serialized [0];
 		correctRotation = (Quaternion) serialized [1];
 		sheepState = (SheepState)serialized [2];
+		navTarget = (Vector3)serialized [3];
 	}
 
-	public int GetSyncCount() {
-		return 3;
+	protected override int GetEntitySyncCount() {
+		return 4;
 	}
 
-	public SheepState GetSheepState() {
-		return this.sheepState;
-	}
-
-	public void DetectedGrassCounter (GrassCounter grassCounter)
-	{
-		
-	}
-
-	public void LostGrassCounter (GrassCounter grassCounter)
-	{
-		
-	}
+	//TODO: onMasterClientChange... navtarget...
 }

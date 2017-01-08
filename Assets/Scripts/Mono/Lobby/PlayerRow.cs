@@ -102,7 +102,7 @@ public abstract class PlayerRow : MonoBehaviour, INetworkCharacter, IPlayerRow {
 			readyToggle.isOn
 		};
 
-		return (object[])baseVars.Append (GetSubSyncVars ());
+		return (object[])baseVars.Appended (GetSubSyncVars ());
 	}
 
 	/// <summary>

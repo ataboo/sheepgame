@@ -1,54 +1,54 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public interface SheepRadarListener {
-	void DetectedGrassCounter (GrassCounter grassCounter);
-	void LostGrassCounter (GrassCounter grassCounter);
-}
+public class SheepRadar : EntityRadar {
+	private List<Component> grassControllers = new List<Component>();
 
-public class SheepRadar : MonoBehaviour {
-	private SheepRadarListener listener;
-
-
-	// Use this for initialization
-	void Start () {
-		this.listener = GetComponentInParent<SheepController> ();
-
-		if (listener == null) {
-			Debug.LogError ("SheepRadar on " + gameObject.name + " couldn't find a listener.");
+	private GrassController closestGrassController;
+	public GrassController ClosestGrass {
+		get{
+			if (closestGrassController == null) {
+				float range = 0;
+				ClosestGrassController (out range);
+			}
+			return closestGrassController;
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
-	public void OnTriggerEnter(Collider collider) {
-		if (listener == null) {
-			return;
+	public GrassController ClosestGrassController(out float range) {
+		if (grassControllers.Count == 0) {
+			range = float.MaxValue;
+			return null;
 		}
 
+		closestGrassController = (GrassController)GetClosest (grassControllers, out range);
+
+		return closestGrassController;
+	}
+		
+	protected override void OnRadarEntered (Collider collider)
+	{
 		Debug.Log ("Sheepdar Einfart: " + collider.gameObject.name);
 
-		GrassCounter grassCounter = collider.gameObject.GetComponent<GrassCounter>();
+		GrassController grassController = collider.gameObject.GetComponent<GrassController>();
 
-		if (grassCounter != null) {
-			listener.DetectedGrassCounter (grassCounter);
+		if (grassController != null) {
+			grassControllers.Add (grassController);
 		}
 	}
 
-	public void OnTriggerExit(Collider collider) {
-		if (listener == null) {
-			return;
-		}
-
+	protected override void OnRadarExited (Collider collider)
+	{
 		Debug.Log ("Sheepdar Ausfart: " + collider.gameObject.name);
 
-		GrassCounter grassCounter = collider.gameObject.GetComponent<GrassCounter>();
+		GrassController grassController = collider.gameObject.GetComponent<GrassController>();
 
-		if (grassCounter != null) {
-			listener.LostGrassCounter (grassCounter);
+		if (grassController != null) {
+			grassControllers.Remove (grassController);
+			if (grassController == closestGrassController) {
+				closestGrassController = null;
+			}
 		}
 	}
 }

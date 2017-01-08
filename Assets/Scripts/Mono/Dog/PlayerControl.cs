@@ -38,7 +38,7 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 		speed = walkSpeed;
 
 		isLocalControl = photonView.isMine;
-		this.spooker.isLocalControl = isLocalControl;
+		this.spooker.localControl = isLocalControl;
 	}
 
 	public void Start() {
@@ -119,7 +119,7 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 			transform.position, 
 			transform.rotation, 
 			velocity,
-			spooker.active
+			spooker.Spooking
 		};
 		
 		return syncVars;
@@ -129,7 +129,7 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 		correctPosition = (Vector3) serialized [0];
 		correctRotation = (Quaternion) serialized [1];
 		velocity = (Vector3) serialized [2];
-		spooker.active = (bool)serialized [3];
+		spooker.Spooking = (bool)serialized [3];
 	}
 	
 	public int GetSyncCount() {
@@ -147,12 +147,12 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 			return false;
 		}
 
-		return spooker.active;
+		return spooker.Spooking;
 	}
 	#endregion
 
 	private void Move() {
-		if(spooker.active) {
+		if(spooker.Spooking) {
 			return;
 		}
 		
@@ -183,7 +183,7 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 			speed = running ? runSpeed : walkSpeed;
 		}
 
-		if (Input.GetButton (activateAxis) && !spooker.active) {
+		if (Input.GetButton (activateAxis) && !spooker.Spooking) {
 			ActivateSpook ();
 		}
 	}

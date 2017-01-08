@@ -4,24 +4,28 @@ using UnityEngine.Networking;
 
 public class Spooker : MonoBehaviour {
 	public bool permaSpooky = false;
-	public float forceRadius = 4f;
-	public float forcePower = 10000f;
 
-	public bool active = false;
-	public bool isLocalControl = false;
+	private bool spooking = false;
+	public bool Spooking {
+		get {
+			return spooking || permaSpooky;
+		}
 
-	private float spookspiry = 0;
+		set {
+			spooking = value;
+		}
+	}
+	public bool localControl = false;
+
+	private float spookspiry = 0f;
 	private Renderer rend;
 
-	public void Start() {
-		active = permaSpooky;
-	}
-
 	public void Awake() {
+		localControl = GetComponent<PhotonView> ().isMine;
 	}
-
+		
 	public void Update() {
-		if (!isLocalControl || permaSpooky || !active) {
+		if (!localControl || !spooking) {
 			return;
 		}
 
@@ -29,37 +33,19 @@ public class Spooker : MonoBehaviour {
 	}
 		
 	public void Activate(float lifeSecs = 0) {
-//		if (!active) {
-//			Explode();
-//		}
-			
-		this.active = true;
-		spookspiry = Time.time + lifeSecs;
-	}
-		
-	private void Explode() {
- 		Vector3 explosionPos = transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, forceRadius);
-        foreach (Collider hit in colliders) {
-			if (hit.gameObject == gameObject) {
-				continue;
-			}
+		if (!localControl) {
+			Debug.LogError ("Spooker should only be activated locally");
+			return;
+		}
 
-			SheepController sc = hit.GetComponent<SheepController>();
-            
-			if (sc != null) {
-				sc.Launch(forcePower, explosionPos, forceRadius, 2.0f);
-			}
-        }
+		this.spooking = true;
+		spookspiry = Time.time + lifeSecs;
 	}
 		
 	private void checkForExpiry() {
 		if (spookspiry <= Time.time) {
-			this.active = false;
+			spooking = false;
+			spookspiry = 0f;
 		}
-	}
-
-	public void OnSpookChange(bool activeChange) {
-		this.active = activeChange;
 	}
 }

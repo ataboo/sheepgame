@@ -93,7 +93,6 @@ public class LevelSettings : MonoBehaviour {
 		private static Dictionary<string, TeamOption> options;
 
 		public static Dictionary<string, TeamOption> OPTIONS {
-
 			get {
 				if (options == null) {
 					options = new Dictionary<string, TeamOption> ();
@@ -113,6 +112,10 @@ public class LevelSettings : MonoBehaviour {
 			get {
 				return new List<string> (OPTIONS.Keys);
 			}
+		}
+
+		public static TeamOption GetTeam(int teamNumber) {
+			return OPTIONS [OPTION_KEYS [teamNumber]];
 		}
 
 		private int number;

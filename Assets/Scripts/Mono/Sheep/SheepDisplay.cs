@@ -2,19 +2,13 @@
 using System.Collections;
 
 
-public interface ISheepDisplay {
-	SheepState GetSheepState();
-}
-
 public class SheepDisplay : MonoBehaviour {
-	public SheepState sheepState = SheepState.Idle;
-
 	private Renderer rendComp;
-	private ISheepDisplay iSheepDisplay;
+	private SheepController sheepController;
 
 	public void Start() {
 		rendComp = GetComponentInChildren<Renderer> ();
-		iSheepDisplay = GetComponent<ISheepDisplay> ();
+		sheepController = GetComponent<SheepController> ();
 	}
 
 	// Update is called once per frame
@@ -25,9 +19,7 @@ public class SheepDisplay : MonoBehaviour {
 	private void ColorizeBehavior() {
 		Color color;
 
-		sheepState = iSheepDisplay.GetSheepState ();
-
-		switch (sheepState) {
+		switch (sheepController.sheepState) {
 		case SheepState.Wandering:
 			color = Color.yellow;
 			break;
