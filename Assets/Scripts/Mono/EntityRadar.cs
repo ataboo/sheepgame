@@ -12,8 +12,11 @@ public abstract class EntityRadar : MonoBehaviour {
 
 	protected abstract void OnRadarExited(Collider collider);
 
-	public void Start() {
+	public void Awake() {
 		myEntity = GetComponentInParent<EntityController> ();
+	}
+
+	public void Start() {
 	}
 
 	public void OnTriggerEnter(Collider collider) {
@@ -21,6 +24,8 @@ public abstract class EntityRadar : MonoBehaviour {
 		if (entity != null) {
 			AddEntity (entity);
 		}
+
+		OnRadarEntered (collider);
 	}
 
 	public void OnTriggerExit(Collider collider) {
@@ -28,6 +33,8 @@ public abstract class EntityRadar : MonoBehaviour {
 		if (entity != null) {
 			RemoveEntity (entity);
 		}
+
+		OnRadarExited (collider);
 	}
 
 	private void AddEntity(EntityController entity) {
@@ -47,11 +54,11 @@ public abstract class EntityRadar : MonoBehaviour {
 
 
 	public EntityController ClosestFriend(out float range) {
-		return (EntityController)GetClosest (friendCandidates, out range, (entity) => { return ((EntityController)entity).SpookerActive; });
+		return (EntityController)GetClosest (friendCandidates, out range);
 	}
 
 	public EntityController ClosestSpooking(out float range) {
-		return (EntityController)GetClosest (spookCandidates, out range);
+		return (EntityController)GetClosest (spookCandidates, out range, (entity) => { return ((EntityController)entity).SpookerActive; });
 	}
 
 	public delegate bool ComponentCondition(Component entity);

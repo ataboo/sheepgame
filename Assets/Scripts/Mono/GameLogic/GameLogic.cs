@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Collections;
 
 
-public class GameLogic : MonoBehaviour, CountListener, DeathListener, FoodListener {
+public class GameLogic : MonoBehaviour, DeathListener {
 	public static PhotonView photonView;
 
 	private const int SPAWN_COUNT = 8;
@@ -14,6 +14,14 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener, FoodListen
 	public int sheepInGoal = 0;
 	public int deadSheep = 0;
 	public UIInterface uiInterface;
+
+	public bool GameOver {
+		get {
+			return gameOver;
+		}
+	}
+
+	public LevelSettings.LevelOption levelOption = LevelSettings.LevelOption.KOTH_CASTLE;
 
 	private bool paused = false;
 	private EntitySpawner spawner;
@@ -24,37 +32,19 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener, FoodListen
 
 	public void Awake() {
 		GameLogic.photonView = GetComponent<PhotonView> ();
-		this.spawner = GetComponent<EntitySpawner> ();
+		spawner = GetComponent<EntitySpawner> ();
 	}
 
 	public void Start() {
 		Initialize ();
-		SheepCounter sheepCounter = GameObject.FindGameObjectWithTag ("sheep-target").GetComponent<SheepCounter> ();
-		sheepCounter.SetListener (this);
 
 		if (PhotonNetwork.isMasterClient) {
-			spawner.InitialSheepSpawn (SPAWN_COUNT);
+			int[] teamIds = (int[])PhotonNetwork.room.CustomProperties [SheepGameMenuController.TEAM_IDS_KEY];
+			spawner.InitialSheepSpawn (teamIds, levelOption.sheepPerTeam);
 		}
 
-		string dogOptionName = (string)LevelSettings.DogOption.OPTION_KEYS [(int)PhotonNetwork.player.CustomProperties [SheepGamePlayerRow.DOG_SELECT_KEY]];
-		LevelSettings.DogOption dogOption = LevelSettings.DogOption.OPTIONS[dogOptionName];
-
+		LevelSettings.DogOption dogOption = LevelSettings.DogOption.GetOption((int)PhotonNetwork.player.CustomProperties[SheepGamePlayerRow.DOG_SELECT_KEY]);
 		spawner.SpawnDog (dogOption);
-	}
-		
-	[PunRPC]
-	public void OnCountChange(int newCount) {
-		if (gameOver) {
-			return;
-		}
-
-		this.sheepInGoal = newCount;
-
-		UpdateHud ();
-
-		if (PhotonNetwork.isMasterClient) {
-			CheckEnd ();
-		}
 	}
 
 	public void OnEnable() {
@@ -70,17 +60,13 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener, FoodListen
 		PhotonNetwork.isMessageQueueRunning = true;
 	}
 		
-	public void IsKill(GameObject gameObject) {
-		if (IsDog(gameObject)) {
-			spawner.RespawnDog(gameObject);
+	public void IsKill(EntityController entityController) {
+		if (entityController.RespawnTime >= 0) {
+			//TODO: schedule delayed respawn
+			spawner.RespawnEntity(entityController);
 		} else {
-			DestroyImmediate (gameObject);
-
-			if (IsSheep (gameObject)) {
-				deadSheep++;
-			}
-
-			GetEntities (true);
+			DestroyImmediate (entityController.gameObject);
+			// Count updated via CheckOut in EntityRegistry.
 			UpdateHud ();
 		}
 	}
@@ -97,15 +83,6 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener, FoodListen
 		PhotonNetwork.isMessageQueueRunning = false;
 		SceneManager.LoadScene ("Lobby");
 	}
-
-
-	private bool IsSheep(GameObject gameObject) {
-		return gameObject.GetComponent<SheepController> () != null;
-	}
-
-	private bool IsDog(GameObject gameObject) {
-		return gameObject.GetComponent<PlayerControl> () != null;
-	}
 		
 	public bool IsPaused() {
 		return paused;
@@ -118,7 +95,7 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener, FoodListen
 	}
 		
 	private void UpdateHud() {
-		uiInterface.UpdateHud(totalSheep, sheepInGoal, deadSheep);
+		//uiInterface.UpdateHud(totalSheep, sheepInGoal, deadSheep);
 	}
 
 	private void DisplayEndScreen() {
@@ -154,7 +131,10 @@ public class GameLogic : MonoBehaviour, CountListener, DeathListener, FoodListen
 		return entities;
 	}
 
-	private void CheckEnd() {
+	public void CheckEndConditions(EntityRegistry.Team team) {
+		
+
+
 		if (totalSheep - sheepInGoal - deadSheep == 0) {
 			photonView.RPC ("EndGame", PhotonTargets.All, totalSheep, sheepInGoal, deadSheep);
 		}

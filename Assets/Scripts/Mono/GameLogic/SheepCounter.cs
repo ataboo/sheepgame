@@ -8,6 +8,10 @@ public class SheepCounter : MonoBehaviour {
 	private CountListener countListener;
 	private int sheepCount = 0;
 
+	public void Awake() {
+		countListener = GameObject.FindGameObjectWithTag ("GameLogic").GetComponent<CountListener> ();
+	}
+
 	public void OnTriggerEnter(Collider collider) {
 		Debug.Log ("Trigger Enter.");
 
@@ -30,16 +34,8 @@ public class SheepCounter : MonoBehaviour {
 			SendCount();
 		}
 	}
-
-	public void SetListener(CountListener countListener) {
-		this.countListener = countListener;
-
-		SendCount ();
-	}
 		
 	private void SendCount() {
-		Debug.Log ("Sheep Count Change: " + sheepCount);
-
 		countListener.OnCountChange (sheepCount);
 	}
 }

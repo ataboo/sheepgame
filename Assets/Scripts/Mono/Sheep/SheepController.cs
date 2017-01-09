@@ -15,11 +15,29 @@ public class SheepController : EntityController {
 	private Vector3 correctPosition;
 	private Quaternion correctRotation;
 	private SheepBehavior sheepBehavior;
-	private Vector3 navTarget;
+	private Vector3 navDestination;
+
+	public Vector3 NavDestination {
+		get {
+			return navDestination;
+		}
+	}
 
 	public override string UID_Class {
 		get {
 			return "SH";
+		}
+	}
+
+	public override int RespawnTime {
+		get {
+			return -1;
+		}
+	}
+
+	public override EntitySpawnPoint.EntityType SpawnType {
+		get {
+			return EntitySpawnPoint.EntityType.Sheep;
 		}
 	}
 
@@ -55,7 +73,7 @@ public class SheepController : EntityController {
 
 	private void UpdateMovement() {
 		sheepBehavior.Navigate();
-		this.navTarget = navAgent.destination;
+		this.navDestination = navAgent.destination;
 	}
 
 	private void LerpRemoteTransform()
@@ -73,7 +91,7 @@ public class SheepController : EntityController {
 			transform.position, 
 			transform.rotation, 
 			(int)sheepState,
-			navTarget
+			navDestination
 		};
 
 		return syncVars;
@@ -83,7 +101,7 @@ public class SheepController : EntityController {
 		correctPosition = (Vector3) serialized [0];
 		correctRotation = (Quaternion) serialized [1];
 		sheepState = (SheepState)serialized [2];
-		navTarget = (Vector3)serialized [3];
+		navDestination = (Vector3)serialized [3];
 	}
 
 	protected override int GetEntitySyncCount() {

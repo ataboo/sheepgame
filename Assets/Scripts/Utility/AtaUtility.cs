@@ -53,7 +53,7 @@ public static class AtaUtility {
 		if (collider is SphereCollider) {
 			SphereCollider sphereCollider = (SphereCollider)collider;
 			float colliderRadius = sphereCollider.radius;
-			return AtaUtility.RandPointInRadius (sphereCollider.transform.position + sphereCollider.center, colliderRadius * padFactor, colliderRadius * (1f - padFactor));
+			return AtaUtility.RandPointInRadius (sphereCollider.gameObject.transform.position, colliderRadius * padFactor, colliderRadius * (1f - padFactor));
 		}
 
 		if (collider is BoxCollider) {

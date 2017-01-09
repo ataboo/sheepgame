@@ -10,70 +10,77 @@ public class EntitySpawner : MonoBehaviour {
 	public GameObject dogPrefab;
 	public GameObject netDogPrefab;
 	
-	private List<Transform> sheepSpawns = new List<Transform>();
+	private List<EntitySpawnPoint> sheepSpawns = new List<EntitySpawnPoint>();
+	private List<EntitySpawnPoint> dogSpawns = new List<EntitySpawnPoint> ();
 	private Transform dogSpawnOne;
 	private UIInterface uiInterface;
 
 	public void Awake() {
-	}
-
-	public void Start() {
 		GetSpawnPoints();
 	}
 		
-	public void RespawnDog(GameObject dog) {
-		if (dogSpawnOne == null) {
-			GetSpawnPoints ();
+	public void RespawnEntity(EntityController entity) {
+		Vector3 basePoint;
 
-			if (dogSpawnOne == null) {
-				Debug.LogError ("Couldn't find dog spawn");
-
-				return;
-			}
+		if (entity.SpawnType == EntitySpawnPoint.EntityType.Dog) {
+			basePoint = GetBaseForTeam (dogSpawns, entity.TeamId);
+		} else {
+			basePoint = GetBaseForTeam (sheepSpawns, entity.TeamId);
 		}
-  
-		Vector3 dogSpawn = MakeSpawnPoint (dogSpawnOne);
 
-		dog.GetComponent<PhotonView> ().RPC ("Teleport", PhotonTargets.AllBuffered, dogSpawn);
+		Vector3 spawnPosition = MakePointAroundBase (basePoint);
+
+		entity.GetComponent<PhotonView> ().RPC ("Teleport", PhotonTargets.AllBuffered, spawnPosition);
 	}
 
 	public void SpawnDog(LevelSettings.DogOption dogOption) {
+		int teamId = (int)PhotonNetwork.player.CustomProperties [SheepGamePlayerRow.TEAM_SELECT_KEY];
+
 		for(int i=0; i<dogOption.DogCount; i++) {
 			GameObject dog = PhotonNetwork.Instantiate(dogOption.PrefabName, Vector3.zero, Quaternion.identity, 0);
-			RespawnDog (dog);
+			dog.GetComponent<PhotonView> ().RPC("Initialize", PhotonTargets.AllBuffered, teamId);
 		}
 	}
 	
-	private void SpawnSheep(Transform basePosition) {
-		Vector3 spawnPos = MakeSpawnPoint(basePosition);
+	private void SpawnSheep(int teamId) {
+		Vector3 spawnPos = MakePointAroundBase (GetBaseForTeam (sheepSpawns, teamId));
 
-		PhotonNetwork.InstantiateSceneObject("NPCNetSheep", spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0), 0, null);
+		GameObject sheep = PhotonNetwork.InstantiateSceneObject("NPCNetSheep", spawnPos, Quaternion.Euler(0, Random.Range(0, 359), 0), 0, null);
+		sheep.GetComponent<PhotonView> ().RPC ("Initialize", PhotonTargets.AllBuffered, teamId);
 	}
 
 	public bool ShouldBeActive(GameObject entity) {
 		return true;
 	}
 
-	public void InitialSheepSpawn(int sheepCount) {		
-		for (int i=0; i < sheepCount; i++) {
-			int spawnPointIndex = Random.Range(0, sheepSpawns.Count);
-
-			SpawnSheep(sheepSpawns[spawnPointIndex]);
+	public void InitialSheepSpawn(int[] teamIds, int sheepPerTeam) {
+		foreach (int teamId in teamIds) {
+			for (int i=0; i < sheepPerTeam; i++) {
+				SpawnSheep(teamId);
+			}
 		}
 	}
+		
+	private Vector3 GetBaseForTeam(List<EntitySpawnPoint> points, int teamId) {
+		List<EntitySpawnPoint> teamSpawns = points.FindAll ((point) => {
+			return (int)point.spawnTeam == teamId;
+		});
 
-	private Vector3 MakeSpawnPoint(Transform basePosition) {
+		return teamSpawns[Random.Range (0, teamSpawns.Count - 1)].transform.position;
+	}
+
+	private Vector3 MakePointAroundBase(Vector3 basePosition) {
 		int tryCount = 0;
 
 		while(true) {
-			Vector3 spawnPos = AtaUtility.RandPointInRadius(basePosition.position, spawnRadRange.x, spawnRadRange.y);
+			Vector3 spawnPos = AtaUtility.RandPointInRadius(basePosition, spawnRadRange.x, spawnRadRange.y);
 			if(!Physics.CheckSphere(spawnPos, spawnCheckRad, LayerMask.GetMask("Default"))) {
 				return spawnPos;
 			}
 
 			if (tryCount == 10) {
 				Debug.Log("Gave up on spawn: " + gameObject.name);
-				return basePosition.position;
+				return basePosition;
 			}
 
 			tryCount++;
@@ -82,13 +89,19 @@ public class EntitySpawner : MonoBehaviour {
 
 	private void GetSpawnPoints() {
 		foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Respawn")) {
-			if (gameObject.name.Contains("Sheep")) {
-				sheepSpawns.Add(gameObject.transform);
+			EntitySpawnPoint spawnPoint = gameObject.GetComponent<EntitySpawnPoint> ();
+
+			if (spawnPoint == null) {
+				Debug.LogError ("GameObject tagged as Respawn named " + gameObject.name + " should have a EntitySpawnPoint attached.");
 				continue;
 			}
 
-			if (gameObject.name.Equals("DogSpawnOne")) {
-				dogSpawnOne = gameObject.transform;
+			if (spawnPoint.SpawnsSheep) {
+				sheepSpawns.Add(spawnPoint);
+			}
+
+			if (spawnPoint.SpawnsDogs) {
+				dogSpawns.Add(spawnPoint);
 			}
 		}
 	}

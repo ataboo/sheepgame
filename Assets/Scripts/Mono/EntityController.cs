@@ -8,7 +8,7 @@ public abstract class EntityController: MonoBehaviour, INetworkCharacter {
 	protected Spooker spooker;
 	protected bool isMasterClient = false;
 	protected string uid;
-	protected int teamId;
+	public int teamId;
 
 	public const int BASE_SYNC_COUNT = 2;
 
@@ -43,6 +43,10 @@ public abstract class EntityController: MonoBehaviour, INetworkCharacter {
 			return isMasterClient;
 		}
 	}
+
+	public abstract int RespawnTime { get; }
+
+	public abstract EntitySpawnPoint.EntityType SpawnType { get; }
 
 	protected abstract object[] GetEntitySyncVars();
 
@@ -93,7 +97,8 @@ public abstract class EntityController: MonoBehaviour, INetworkCharacter {
 		EntityUpdate ();
 	}
 
-	public void Innitialize(int teamId) {
+	[PunRPC]
+	public void Initialize(int teamId) {
 		this.teamId = teamId;
 
 		if (registry == null) {
@@ -106,7 +111,7 @@ public abstract class EntityController: MonoBehaviour, INetworkCharacter {
 		EntityInit ();
 	}
 
-	void OnDestroy() {
+	public virtual void OnDestroy() {
 		registry.CheckOut (this);
 	}
 
@@ -141,6 +146,6 @@ public abstract class EntityController: MonoBehaviour, INetworkCharacter {
 
 	public virtual bool IsFriend (EntityController target)
 	{
-		return !target.HasSpooker  && TeamId == target.TeamId;
+		return !target.HasSpooker && TeamId == target.TeamId;
 	}
 }

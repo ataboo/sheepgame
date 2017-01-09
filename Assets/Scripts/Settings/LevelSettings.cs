@@ -3,15 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LevelSettings : MonoBehaviour {
+	public const int COUNTDOWN_LENGTH = 10;
+
 	public sealed class LevelOption
 	{
-		public static readonly LevelOption VS_BARNS = new LevelOption ("Versus Crater", "VsCrater");
-		public static readonly LevelOption COOP_RAMP = new LevelOption ("Coop Ramp", "CoopRamp");
-		public static readonly LevelOption KOTH_CASTLE = new LevelOption ("KOTH Castle", "KOTH_Castle");
+		public static readonly LevelOption VS_BARNS = new LevelOption (
+			name: "Versus Crater", 
+			sceneName: "VsCrater",
+			levelMinutes: COUNTDOWN_LENGTH,
+			maxTeamCount: 4,
+			sheepPerTeam: 10
+		);
+		public static readonly LevelOption COOP_RAMP = new LevelOption (
+			name: "Coop Ramp", 
+			sceneName: "CoopRamp",
+			levelMinutes: COUNTDOWN_LENGTH,
+			maxTeamCount: 1,
+			sheepPerTeam: 10
+		);
+		public static readonly LevelOption KOTH_CASTLE = new LevelOption (
+			name: "KOTH Castle", 
+			sceneName: "KOTH_Castle",
+			levelMinutes: COUNTDOWN_LENGTH,
+			maxTeamCount: 4,
+			sheepPerTeam: 10
+		);
 
 		public static readonly Dictionary<string, LevelOption> OPTIONS = new Dictionary<string, LevelOption>(){ 
 			{COOP_RAMP.ToString(), COOP_RAMP}, 
-			{VS_BARNS.ToString(), VS_BARNS},
+			//{VS_BARNS.ToString(), VS_BARNS},
 			{KOTH_CASTLE.ToString(), KOTH_CASTLE}
 		};
 
@@ -29,11 +49,17 @@ public class LevelSettings : MonoBehaviour {
 
 		private string name;
 		private string sceneName;
+		public int levelMinutes;
+		public int maxTeamCount;
+		public int sheepPerTeam;
 
-		public LevelOption(string name, string sceneName) 
+		public LevelOption(string name, string sceneName, int levelMinutes, int maxTeamCount, int sheepPerTeam) 
 		{
 			this.name = name;
 			this.sceneName = sceneName;
+			this.levelMinutes = levelMinutes;
+			this.maxTeamCount = maxTeamCount;
+			this.sheepPerTeam = sheepPerTeam;
 		}
 
 		public override string ToString ()
@@ -83,6 +109,10 @@ public class LevelSettings : MonoBehaviour {
 		public override string ToString ()
 		{
 			return name;
+		}
+
+		public static DogOption GetOption(int index) {
+			return OPTIONS [OPTION_KEYS [index]];
 		}
 	}
 

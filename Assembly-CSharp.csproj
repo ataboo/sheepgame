@@ -130,10 +130,12 @@
      <Compile Include="Assets\Scripts\Mono\EntityController.cs" />
      <Compile Include="Assets\Scripts\Mono\EntityRadar.cs" />
      <Compile Include="Assets\Scripts\Mono\EntityRegistry.cs" />
+     <Compile Include="Assets\Scripts\Mono\EntitySpawnPoint.cs" />
      <Compile Include="Assets\Scripts\Mono\EntitySpawner.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\CameraController.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\FoodListener.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\GameLogic.cs" />
+     <Compile Include="Assets\Scripts\Mono\GameLogic\GameLogicCustomEditor.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\GrassController.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\SheepCounter.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\UIInterface.cs" />

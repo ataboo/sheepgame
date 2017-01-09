@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 
 public interface DeathListener {
-	void IsKill(GameObject gameObject);
+	void IsKill(EntityController entityController);
 }
 
 public class DeathCheck : MonoBehaviour {
@@ -26,7 +26,7 @@ public class DeathCheck : MonoBehaviour {
 		if (deathListener == null) {
 			Debug.LogError("DeathCheck has no entitydelegate.");
 		} else {
-			deathListener.IsKill(gameObject);
+			deathListener.IsKill(GetComponent<EntityController>());
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
+public class PlayerControl : EntityController, INetworkCharacter, IDogDisplay {
 	public enum DogControl {
 		DogOne,
 		DogTwo,
@@ -17,8 +17,8 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 	public Vector3 correctPosition;
 	public Quaternion correctRotation;
 
-	float walkSpeed = 4.0f;
-	float runSpeed = 10f;
+	float walkSpeed = 2.0f;
+	float runSpeed = 6.0f;
 	private float speed;
 	private bool running = false;
 
@@ -26,12 +26,30 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 	public bool isLocalControl = false;
 
 	public bool isActive = false;
-	private Spooker spooker;
 	private CharacterController controller;
 	private CameraController cameraController;
 	private PhotonView photonView;
 
-	public void Awake() {
+	public override string UID_Class {
+		get {
+			return "dog";
+		}
+	}
+
+	public override int RespawnTime {
+		get {
+			return 0;
+		}
+	}
+
+	public override EntitySpawnPoint.EntityType SpawnType {
+		get {
+			return EntitySpawnPoint.EntityType.Dog;
+		}
+	}
+
+	protected override void EntityAwake ()
+	{
 		spooker = GetComponent<Spooker> ();
 		photonView = GetComponent <PhotonView> ();
 		cameraController = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController> ();
@@ -41,19 +59,16 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 		this.spooker.localControl = isLocalControl;
 	}
 
-	public void Start() {
+	protected override void EntityStart ()
+	{
 		if (isLocalControl) {
 			dogControl = GameObject.FindGameObjectWithTag ("Camera").GetComponent<CameraController> ().RegisterDog (this);
 			this.SetControls ();
 		}
 	}
 
-	public void Update () {
-		if (!isActive) {
-			return;
-		}
-
-
+	protected override void EntityUpdate ()
+	{
 		if (isLocalControl) {
 			Move ();
 			ProcessInput();
@@ -62,7 +77,14 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 		}
 	}
 
-	public void OnDestroy() {
+	protected override void EntityInit ()
+	{
+		GetComponent<Rigidbody> ().useGravity = true;
+	}
+
+	public override void OnDestroy() {
+		base.OnDestroy ();
+
 		if (isLocalControl) {
 			UnregisterFromCamera ();
 		}
@@ -102,40 +124,31 @@ public class PlayerControl : MonoBehaviour, INetworkCharacter, IDogDisplay {
 
 	[PunRPC]
 	public void Teleport(Vector3 position) {
-		this.isActive = true;
-		
 		this.transform.position = position;
 	}
 
-	#region INetworkCharacter
-	public object[] GetSyncVars() {
-		if (spooker == null) {
-			Debug.Log ("Confirmed... spooker is null.");
-			spooker = GetComponent<Spooker> ();
-		}
-
-
-		object[] syncVars = new object[] {
+	protected override object[] GetEntitySyncVars ()
+	{
+		return new object[] {
 			transform.position, 
 			transform.rotation, 
 			velocity,
 			spooker.Spooking
 		};
-		
-		return syncVars;
 	}
-	
-	public void PutSyncVars(object[] serialized) {
-		correctPosition = (Vector3) serialized [0];
-		correctRotation = (Quaternion) serialized [1];
-		velocity = (Vector3) serialized [2];
-		spooker.Spooking = (bool)serialized [3];
+
+	protected override void PutEntitySyncVars (object[] syncVars)
+	{
+		correctPosition = (Vector3) syncVars [0];
+		correctRotation = (Quaternion) syncVars [1];
+		velocity = (Vector3) syncVars [2];
+		spooker.Spooking = (bool)syncVars [3];
 	}
-	
-	public int GetSyncCount() {
+
+	protected override int GetEntitySyncCount ()
+	{
 		return 4;
 	}
-	#endregion
 	
 	#region IDogDisplay
 	public float GetVelocity() {

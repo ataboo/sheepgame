@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
     public GameObject dogOne;
     public GameObject dogTwo;
 
-    const float MinCamHeight = 30f;
+    const float MinCamHeight = 20f;
     private bool wideAxisDown = false;
     private bool wideActive = false;
     private Vector3 offset;

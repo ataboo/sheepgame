@@ -14,6 +14,13 @@ public class SheepDisplay : MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {
 		ColorizeBehavior ();
+		DebugNav ();
+	}
+
+	private void DebugNav() {
+		if (sheepController.NavDestination != null) {
+			Debug.DrawLine (transform.position, sheepController.NavDestination, Color.cyan);
+		}
 	}
 
 	private void ColorizeBehavior() {

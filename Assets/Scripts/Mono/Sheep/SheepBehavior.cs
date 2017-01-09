@@ -8,6 +8,7 @@ public enum SheepState
 	Herding,
 	Wandering,
 	Pausing,
+	MovingToFood,
 	Eating,
 	Dead,
 	Ballistic,
@@ -25,7 +26,6 @@ public class SheepBehavior: MonoBehaviour {
 
 	public Vector2 wanderTimeRange = new Vector2(2.0f, 4.0f);
 	public Vector2 eatTimeRange = new Vector2(2.0f, 3.0f);
-
 
 	private NavMeshAgent navAgent;
 	private SheepRadar sheepRadar;
@@ -47,7 +47,7 @@ public class SheepBehavior: MonoBehaviour {
 
 	public void Awake() {
 		navAgent = GetComponent<NavMeshAgent> ();
-		sheepRadar = GetComponent<SheepRadar> ();
+		sheepRadar = GetComponentInChildren<SheepRadar> ();
 		sheepController = GetComponent<SheepController> ();
 		foodListener = GameObject.FindGameObjectWithTag ("GameLogic").GetComponent<FoodListener> ();
 	}
@@ -104,7 +104,7 @@ public class SheepBehavior: MonoBehaviour {
 		NavMeshHit hit;
 		NavMesh.SamplePosition(runPos, out hit, 16f, 1);
 
-		navAgent.SetDestination(hit.position);
+		SetNavDestination(hit.position);
 	}
 	#endregion
 
@@ -124,7 +124,7 @@ public class SheepBehavior: MonoBehaviour {
 		sheepState = SheepState.Herding;
 
 		actionTimeout = Time.time + 0.5f;
-		navAgent.SetDestination(friend.transform.position);
+		SetNavDestination(friend.transform.position);
 	}
 	#endregion
 
@@ -138,11 +138,11 @@ public class SheepBehavior: MonoBehaviour {
 
 	private bool ManageEating(GrassController nearestGrass) {
 		if (!nearestGrass.IsInside (gameObject)) {
-			MoveIntoGrass ();
+			MoveIntoGrass (nearestGrass);
 		} else {
 			if (sheepState == SheepState.Eating) {
 				JustAteGrass ();
-				WanderInGrass ();
+				WanderInGrass (nearestGrass);
 			} else {
 				EatGrass ();
 			}
@@ -151,20 +151,23 @@ public class SheepBehavior: MonoBehaviour {
 		return true;
 	}
 
-	private void MoveIntoGrass() {
-		sheepState = SheepState.Wandering;
+	private void MoveIntoGrass(GrassController grassController) {
+		sheepState = SheepState.MovingToFood;
+		SetNavDestination (grassController.transform.position);
 		ActionTime (2f);
 	}
 
-	private void WanderInGrass() {
-		sheepState = SheepState.Wandering;
+	private void WanderInGrass(GrassController grassController) {
+		sheepState = SheepState.MovingToFood;
 		ActionTime (wanderTimeRange.x, wanderTimeRange.y);
 		
-		if (grasstination == null || navAgent.remainingDistance < 0.1) {
-			grasstination = sheepRadar.ClosestGrass.GetWanderPoint ();
+		if (grasstination == Vector3.zero || navAgent.remainingDistance < 0.1) {
+			grasstination = grassController.GetWanderPoint ();
 		}
+
+		Debug.Log ("grasstination: " + grasstination);
 		
-		navAgent.SetDestination (grasstination);
+		SetNavDestination (grasstination);
 	}
 
 	private void EatGrass() {
@@ -175,10 +178,15 @@ public class SheepBehavior: MonoBehaviour {
 
 	private void JustAteGrass() {
 		if (foodListener != null) {
-			foodListener.JustAte (sheepController);
+			foodListener.JustAteGrass (sheepController.TeamId);
 		}
 	}
+
 	#endregion
+
+	private void SetNavDestination(Vector3 position) {
+		navAgent.SetDestination (position);
+	}
 
 	#region Wandering
 	private bool DeserveABreak() {
@@ -188,7 +196,7 @@ public class SheepBehavior: MonoBehaviour {
 	}
 	private void Wander() {
 		ActionTime(wanderTimeRange.x, wanderTimeRange.y);
-		navAgent.SetDestination(getWanderPos());
+		SetNavDestination(getWanderPos());
 		sheepState = SheepState.Wandering;
 	}
 	
@@ -202,7 +210,7 @@ public class SheepBehavior: MonoBehaviour {
 	
 	private void TakeBreak() {
 		ActionTime(eatTimeRange.x, eatTimeRange.y);
-		navAgent.SetDestination(transform.position);
+		SetNavDestination(transform.position);
 		sheepState = SheepState.Idle;
 	}
 	#endregion

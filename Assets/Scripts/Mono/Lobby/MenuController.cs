@@ -33,6 +33,8 @@ public abstract class MenuController : MonoBehaviour, PlayerRowListener, Network
 
 	abstract protected string LobbyRowPrefabName ();
 
+	abstract protected void OnBeforeLaunch ();
+
 	public void Awake() {
 		this.gameNetworking = GameNetworking.Instance;
 		gameNetworking.SetNetworkListener(this);
@@ -230,6 +232,8 @@ public abstract class MenuController : MonoBehaviour, PlayerRowListener, Network
 	}
 
 	private void LaunchLevel() {
+		OnBeforeLaunch ();
+
 		PhotonNetwork.isMessageQueueRunning = false;
 		string levelName = LevelSettings.LevelOption.OPTION_KEYS[(int)PhotonNetwork.room.CustomProperties [LEVEL_SELECT_KEY]];
 		string sceneName = LevelSettings.LevelOption.OPTIONS [levelName].SceneName;

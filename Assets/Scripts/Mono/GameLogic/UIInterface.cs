@@ -2,12 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public interface UIListener {
-	void UpdateHud(int total, int inGoal, int dead);
-	void ShowEndScreen (int total, int inGoal, int dead, float runTime);
-}
 
-public class UIInterface: MonoBehaviour, UIListener {
+public class UIInterface: MonoBehaviour {
 	public class GameSummary {
 		const float WinRatio = 0.75f;
 		public int sheepInGoal;
@@ -66,10 +62,26 @@ public class UIInterface: MonoBehaviour, UIListener {
 	public Text endDetail;
 	public Text endLeaveText;
 
-	public void UpdateHud(int total, int inGoal, int dead) {
-		int wildCount = total - inGoal - dead;
+	public bool countingSheep = true;
+	private EntityRegistry registry;
 
-		hudText.text = string.Format("Sheep Count\nInside Goal: {0}\nIn The Wild: {1}\nDeparted: {2}", inGoal, wildCount, dead);
+	public void Awake() {
+		this.registry = GameObject.FindGameObjectWithTag ("GameLogic").GetComponent<EntityRegistry> ();	
+	}
+
+	public void UpdateHud() {
+		EntityRegistry.Team[] teams = registry.TeamArray;
+
+		if (countingSheep) {
+			hudText.text = string.Format("Sheep Count\nInside Goal: {0}\nIn The Wild: {1}\nDeparted: {2}", teams[0].sheepInGoal, teams[0].SheepInWild, teams[0].sheepKilled);
+		} else {
+			string hudString = "Grass Eaten:";
+
+			for (int i = 0; i < teams.Length; i++) {
+				hudString += string.Format ("\nTeam {0}: {1}", teams [i].TeamId, teams [i].grassEaten);
+			}
+		}
+
 	}
 		
 	public void ShowEndScreen(int total, int inGoal, int dead, float runTime) {
