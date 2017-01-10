@@ -136,7 +136,7 @@ public class SheepBehavior: MonoBehaviour {
 		return sheepRadar.ClosestGrassController (out range);
 	}
 
-	private bool ManageEating(GrassController nearestGrass) {
+	private void ManageEating(GrassController nearestGrass) {
 		if (!nearestGrass.IsInside (gameObject)) {
 			MoveIntoGrass (nearestGrass);
 		} else {
@@ -147,13 +147,11 @@ public class SheepBehavior: MonoBehaviour {
 				EatGrass ();
 			}
 		}
-
-		return true;
 	}
 
 	private void MoveIntoGrass(GrassController grassController) {
 		sheepState = SheepState.MovingToFood;
-		SetNavDestination (grassController.transform.position);
+		SetNavDestination (grassController.gameObject.transform.position);
 		ActionTime (2f);
 	}
 

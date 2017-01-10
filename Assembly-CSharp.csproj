@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{98969747-91EA-E9C7-0E75-0F2E6659BAF2}</ProjectGuid>
+    <ProjectGuid>{36585386-4B39-E9BC-75D0-8FBDAEFAF3C9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -124,15 +124,20 @@
      <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
      <Compile Include="Assets\Scripts\HubDemo\DemoHubManager.cs" />
      <Compile Include="Assets\Scripts\HubDemo\ToDemoHubButton.cs" />
-     <Compile Include="Assets\Scripts\Mono\DeathCheck.cs" />
-     <Compile Include="Assets\Scripts\Mono\Dog\DogDisplay.cs" />
-     <Compile Include="Assets\Scripts\Mono\Dog\PlayerControl.cs" />
-     <Compile Include="Assets\Scripts\Mono\EntityController.cs" />
-     <Compile Include="Assets\Scripts\Mono\EntityRadar.cs" />
-     <Compile Include="Assets\Scripts\Mono\EntityRegistry.cs" />
-     <Compile Include="Assets\Scripts\Mono\EntitySpawnPoint.cs" />
-     <Compile Include="Assets\Scripts\Mono\EntitySpawner.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\DeathCheck.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\Dog\DogDisplay.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\Dog\PlayerControl.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\EntityController.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\EntityRadar.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\Sheep\SheepBehavior.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\Sheep\SheepController.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\Sheep\SheepDisplay.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\Sheep\SheepRadar.cs" />
+     <Compile Include="Assets\Scripts\Mono\Entities\Spooker.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\CameraController.cs" />
+     <Compile Include="Assets\Scripts\Mono\GameLogic\EntityRegistry.cs" />
+     <Compile Include="Assets\Scripts\Mono\GameLogic\EntitySpawnPoint.cs" />
+     <Compile Include="Assets\Scripts\Mono\GameLogic\EntitySpawner.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\FoodListener.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\GameLogic.cs" />
      <Compile Include="Assets\Scripts\Mono\GameLogic\GameLogicCustomEditor.cs" />
@@ -143,11 +148,6 @@
      <Compile Include="Assets\Scripts\Mono\Lobby\PlayerRow.cs" />
      <Compile Include="Assets\Scripts\Mono\Lobby\SheepGameMenuController.cs" />
      <Compile Include="Assets\Scripts\Mono\Lobby\SheepGamePlayerRow.cs" />
-     <Compile Include="Assets\Scripts\Mono\Sheep\SheepBehavior.cs" />
-     <Compile Include="Assets\Scripts\Mono\Sheep\SheepController.cs" />
-     <Compile Include="Assets\Scripts\Mono\Sheep\SheepDisplay.cs" />
-     <Compile Include="Assets\Scripts\Mono\Sheep\SheepRadar.cs" />
-     <Compile Include="Assets\Scripts\Mono\Spooker.cs" />
      <Compile Include="Assets\Scripts\Network\GameNetworking.cs" />
      <Compile Include="Assets\Scripts\Network\NetworkCharacter.cs" />
      <Compile Include="Assets\Scripts\Network\Old\DogController.cs" />
@@ -172,15 +172,15 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="Photon3Unity3D">
- <HintPath>C:/Users/ataboo/projects/Sheep-Game/Assets/Plugins/Photon3Unity3D.dll</HintPath>
+ <HintPath>C:/Users/ataboo/projects/sheepgame/Assets/Plugins/Photon3Unity3D.dll</HintPath>
  </Reference>
  <Reference Include="websocket-sharp">
- <HintPath>C:/Users/ataboo/projects/Sheep-Game/Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
+ <HintPath>C:/Users/ataboo/projects/sheepgame/Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{6059507B-13EF-3665-C460-2145814FC3F8}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{034DC60A-05E5-B5E6-7748-ACC732661CA8}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
