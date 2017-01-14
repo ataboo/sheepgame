@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 public class EntitySpawner : MonoBehaviour {
 
-	public Vector2 spawnRadRange = new Vector2(2f, 10f);
+	public Vector2 spawnRadRange = new Vector2(5f, 20f);
 	public float spawnCheckRad = 1f;
 	public GameObject sheepPrefab;
 	public GameObject dogPrefab;
@@ -35,9 +35,9 @@ public class EntitySpawner : MonoBehaviour {
 
 	public void SpawnDog(LevelSettings.DogOption dogOption) {
 		int teamId = (int)PhotonNetwork.player.CustomProperties [SheepGamePlayerRow.TEAM_SELECT_KEY];
-
+		Vector3 spawnPos = MakePointAroundBase (GetBaseForTeam (sheepSpawns, teamId));
 		for(int i=0; i<dogOption.DogCount; i++) {
-			GameObject dog = PhotonNetwork.Instantiate(dogOption.PrefabName, Vector3.zero, Quaternion.identity, 0);
+			GameObject dog = PhotonNetwork.Instantiate(dogOption.PrefabName, spawnPos, Quaternion.identity, 0);
 			dog.GetComponent<PhotonView> ().RPC("Initialize", PhotonTargets.AllBuffered, teamId);
 		}
 	}
@@ -74,7 +74,7 @@ public class EntitySpawner : MonoBehaviour {
 
 		while(true) {
 			Vector3 spawnPos = AtaUtility.RandPointInRadius(basePosition, spawnRadRange.x, spawnRadRange.y);
-			if(!Physics.CheckSphere(spawnPos, spawnCheckRad, LayerMask.GetMask("Default"))) {
+			if(!EntityInSphere(spawnPos, 2)) {
 				return spawnPos;
 			}
 
@@ -85,6 +85,18 @@ public class EntitySpawner : MonoBehaviour {
 
 			tryCount++;
 		}
+	}
+
+	private bool EntityInSphere(Vector3 position, float radius) {
+		Collider[] collisions = Physics.OverlapSphere(position, radius, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore);
+
+		foreach (Collider collider in collisions) {
+			if (collider.gameObject.GetComponent<EntityController>() != null) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private void GetSpawnPoints() {

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 
 public interface DeathListener {
 	void IsKill(EntityController entityController);

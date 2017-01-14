@@ -16,16 +16,12 @@ public enum SheepState
 }
 
 public class SheepBehavior: MonoBehaviour {
-	public float minFriendRange = 4f;
-
-	public float walkingSpeed = 5;
-	public float runningSpeed = 15;
-
-	public float maxLaunchForce = 100f;
-	public float launchDistance = 3f;
-
-	public Vector2 wanderTimeRange = new Vector2(2.0f, 4.0f);
-	public Vector2 eatTimeRange = new Vector2(2.0f, 3.0f);
+	private float minFriendRange = 6f;
+	private float walkingSpeed = 1.5f;
+	private float runningSpeed = 3f;
+	private float spookRangeSqr = 10 * 10f; 
+	private Vector2 wanderTimeRange = new Vector2(2.0f, 4.0f);
+	private Vector2 eatTimeRange = new Vector2(2.0f, 3.0f);
 
 	private NavMeshAgent navAgent;
 	private SheepRadar sheepRadar;
@@ -68,6 +64,8 @@ public class SheepBehavior: MonoBehaviour {
 
 			EntityController nearestFriend = IsLonely ();
 			if (nearestFriend != null) {
+				grasstination = Vector3.zero;
+
 				Herd (nearestFriend.gameObject);
 				return;
 			}
@@ -89,9 +87,14 @@ public class SheepBehavior: MonoBehaviour {
 
 	#region Spooky
 	private EntityController CheckSpooked() {
-		//TODO: range stuff?
-		float range = float.MaxValue;
-		return sheepRadar.ClosestSpooking(out range);
+		float rangeSqr = float.MaxValue;
+		EntityController spookyEntity = sheepRadar.ClosestSpooking(out rangeSqr);
+
+		if (rangeSqr < spookRangeSqr) {
+			return spookyEntity;
+		} else {
+			return null;
+		}
 	}
 		
 	private void RunAway(GameObject enemy) {
@@ -110,10 +113,10 @@ public class SheepBehavior: MonoBehaviour {
 
 	#region Herding
 	private EntityController IsLonely() {
-		float range = float.MaxValue;
-		EntityController nearestFriend = sheepRadar.ClosestFriend (out range);
+		float rangeSqr = float.MaxValue;
+		EntityController nearestFriend = sheepRadar.ClosestFriend (out rangeSqr);
 
-		if (nearestFriend != null && (range > minFriendRange * minFriendRange)) {
+		if (nearestFriend != null && (rangeSqr > minFriendRange * minFriendRange)) {
 			return nearestFriend;
 		} 
 		return null;	
@@ -132,8 +135,8 @@ public class SheepBehavior: MonoBehaviour {
 	private GrassController WantsToEat() {
 		//TODO: range stuff?
 		
-		float range = float.MaxValue;
-		return sheepRadar.ClosestGrassController (out range);
+		float rangeSqr = float.MaxValue;
+		return sheepRadar.ClosestGrassController (out rangeSqr);
 	}
 
 	private void ManageEating(GrassController nearestGrass) {
@@ -159,19 +162,17 @@ public class SheepBehavior: MonoBehaviour {
 		sheepState = SheepState.MovingToFood;
 		ActionTime (wanderTimeRange.x, wanderTimeRange.y);
 		
-		if (grasstination == Vector3.zero || navAgent.remainingDistance < 0.1) {
+		if (grasstination == Vector3.zero || navAgent.remainingDistance < 3f) {
 			grasstination = grassController.GetWanderPoint ();
 		}
 
-		Debug.Log ("grasstination: " + grasstination);
-		
 		SetNavDestination (grasstination);
 	}
 
 	private void EatGrass() {
 		sheepState = SheepState.Eating;
 		navAgent.speed = 0f;
-		ActionTime (1f, 1.5f);
+		ActionTime (5f, 6f);
 	}
 
 	private void JustAteGrass() {

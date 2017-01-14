@@ -88,7 +88,8 @@ public class EntityRegistry : MonoBehaviour, CountListener, FoodListener {
 			return;
 		}
 		Team team = teams [teamId];
-		GetComponent<PhotonView> ().RPC ("UpdateGrassCount", PhotonTargets.OthersBuffered, teamId, team.grassEaten + 1);
+		GetComponent<PhotonView> ().RPC ("UpdateGrassCount", PhotonTargets.AllBuffered, teamId, team.grassEaten + 1);
+		Debug.Log("Just called just ate grass.");
 	}
 
 	[PunRPC]

@@ -1,36 +1,27 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class SheepRadar : EntityRadar {
 	private List<Component> grassControllers = new List<Component>();
 
-	private GrassController closestGrassController;
 	public GrassController ClosestGrass {
 		get{
-			if (closestGrassController == null) {
-				float range = 0;
-				ClosestGrassController (out range);
-			}
-			return closestGrassController;
+			float rangeSqr = 0;
+			return ClosestGrassController (out rangeSqr);
 		}
 	}
 
-	public GrassController ClosestGrassController(out float range) {
+	public GrassController ClosestGrassController(out float rangeSqr) {
 		if (grassControllers.Count == 0) {
-			range = float.MaxValue;
+			rangeSqr = float.MaxValue;
 			return null;
 		}
 
-		closestGrassController = (GrassController)GetClosest (grassControllers, out range);
-
-		return closestGrassController;
+		return (GrassController)GetClosest (grassControllers, out rangeSqr);
 	}
 		
 	protected override void OnRadarEntered (Collider collider)
 	{
-		Debug.Log ("Sheepdar Einfart: " + collider.gameObject.name);
-
 		GrassController grassController = collider.gameObject.GetComponent<GrassController>();
 
 		if (grassController != null) {
@@ -40,15 +31,10 @@ public class SheepRadar : EntityRadar {
 
 	protected override void OnRadarExited (Collider collider)
 	{
-		Debug.Log ("Sheepdar Ausfart: " + collider.gameObject.name);
-
 		GrassController grassController = collider.gameObject.GetComponent<GrassController>();
 
 		if (grassController != null) {
 			grassControllers.Remove (grassController);
-			if (grassController == closestGrassController) {
-				closestGrassController = null;
-			}
 		}
 	}
 }

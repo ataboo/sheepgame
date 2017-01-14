@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -155,10 +154,6 @@ public class GameLogic : MonoBehaviour, DeathListener {
 		}
 
 		QuitToMain (false);
-	}
-
-	public void JustAte(EntityController entity) {
-		//TODO: Increment food count
 	}
 }
 

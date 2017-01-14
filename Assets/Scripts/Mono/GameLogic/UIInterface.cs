@@ -67,6 +67,8 @@ public class UIInterface: MonoBehaviour {
 
 	public void Awake() {
 		this.registry = GameObject.FindGameObjectWithTag ("GameLogic").GetComponent<EntityRegistry> ();	
+
+		UpdateHud();
 	}
 
 	public void UpdateHud() {
@@ -78,10 +80,10 @@ public class UIInterface: MonoBehaviour {
 			string hudString = "Grass Eaten:";
 
 			for (int i = 0; i < teams.Length; i++) {
-				hudString += string.Format ("\nTeam {0}: {1}", teams [i].TeamId, teams [i].grassEaten);
+				hudString += string.Format ("\n{0}: {1}", teams [i].ToString(), teams [i].grassEaten);
 			}
+			hudText.text = hudString;
 		}
-
 	}
 		
 	public void ShowEndScreen(int total, int inGoal, int dead, float runTime) {
