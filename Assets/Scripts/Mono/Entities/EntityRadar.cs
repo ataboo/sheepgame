@@ -57,15 +57,15 @@ public abstract class EntityRadar : MonoBehaviour {
 		return (EntityController)GetClosest (friendCandidates, out range);
 	}
 
-	public EntityController ClosestSpooking(out float range) {
-		return (EntityController)GetClosest (spookCandidates, out range, (entity) => { return ((EntityController)entity).SpookerActive; });
+	public EntityController ClosestSpooking(out float rangeSqr) {
+		return (EntityController)GetClosest (spookCandidates, out rangeSqr, (entity) => { return ((EntityController)entity).SpookerActive; });
 	}
 
 	public delegate bool ComponentCondition(Component entity);
 
-	public Component GetClosest(IEnumerable<Component> components, out float range, ComponentCondition condition = null) {
+	public Component GetClosest(IEnumerable<Component> components, out float rangeSqr, ComponentCondition condition = null) {
 		Component closest = null;
-		range = float.MaxValue;
+		rangeSqr = float.MaxValue;
 
 		foreach (Component component in components) {
 			if (condition != null && !condition (component)) {
@@ -73,9 +73,9 @@ public abstract class EntityRadar : MonoBehaviour {
 			}
 
 			float componentRange = DistanceSqr (component);
-			if (closest == null || componentRange < range) {
+			if (closest == null || componentRange < rangeSqr) {
 				closest = component;
-				range = componentRange;
+				rangeSqr = componentRange;
 			}
 		}
 

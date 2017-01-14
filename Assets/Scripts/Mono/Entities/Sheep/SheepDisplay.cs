@@ -36,6 +36,9 @@ public class SheepDisplay : MonoBehaviour {
 		case SheepState.Panicking:
 			color = Color.red;
 			break;
+		case SheepState.MovingToFood:
+			color = Color.cyan;
+			break;
 		case SheepState.Eating:
 			color = Color.green;
 			break;

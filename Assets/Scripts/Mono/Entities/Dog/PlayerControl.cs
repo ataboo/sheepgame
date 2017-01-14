@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class PlayerControl : EntityController, INetworkCharacter, IDogDisplay {
 	public enum DogControl {
@@ -79,7 +79,12 @@ public class PlayerControl : EntityController, INetworkCharacter, IDogDisplay {
 
 	protected override void EntityInit ()
 	{
-		GetComponent<Rigidbody> ().useGravity = true;
+		Debug.Log("Entity Init.");
+		Rigidbody rb = GetComponent<Rigidbody>();
+
+		rb.isKinematic = false;
+		rb.useGravity = true;
+		Debug.Log("Level done Loading.");
 	}
 
 	public override void OnDestroy() {

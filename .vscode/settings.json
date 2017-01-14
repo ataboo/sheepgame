@@ -1,4 +1,9 @@
 {
+	"files.associations":
+	{
+		"*.bjs":"javascript",
+		"*.javascript":"javascript"
+	},
 	"files.exclude":
 	{
 		"**/.DS_Store":true,
@@ -16,9 +21,12 @@
 		"**/*.dll":true,
 		"**/*.exe":true,
 		"**/*.pdf":true,
+		"**/*.mp4":true,
 		"**/*.mid":true,
 		"**/*.midi":true,
 		"**/*.wav":true,
+		"**/*.mp3":true,
+		"**/*.ogg":true,
 		"**/*.gif":true,
 		"**/*.ico":true,
 		"**/*.jpg":true,
@@ -28,6 +36,8 @@
 		"**/*.tga":true,
 		"**/*.tif":true,
 		"**/*.tiff":true,
+		"**/*.hdr":true,
+		"**/*.exr":true,
 		"**/*.3ds":true,
 		"**/*.3DS":true,
 		"**/*.fbx":true,

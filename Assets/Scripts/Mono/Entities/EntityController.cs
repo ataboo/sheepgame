@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
+using UnityEngine.SceneManagement;
 
 [RequireComponent (typeof(NetworkCharacter))]
 public abstract class EntityController: MonoBehaviour, INetworkCharacter {
@@ -110,7 +109,6 @@ public abstract class EntityController: MonoBehaviour, INetworkCharacter {
 
 		EntityInit ();
 	}
-
 	public virtual void OnDestroy() {
 		registry.CheckOut (this);
 	}
